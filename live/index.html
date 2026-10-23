@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>NNR Live Jobs</title>
+<meta name="description" content="Every job on location, live from the stage emails.">
+<meta name="theme-color" content="#0a1013">
+<meta name="color-scheme" content="dark">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NNR Live">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+// Opened from the home-screen icon: go straight to the real page.
+(function(){
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  if (standalone || /[?&]launch=1/.test(location.search)) location.replace("https://claude.ai/artifact/3MyeewPLZ6N9vU3q9zfHC6");
+})();
+</script>
+<style>
+:root { --bg:#0a1013; --panel:#10191e; --line:#213039; --ink:#e4ecef; --ink2:#98abb4; --c:#f0559a; --season:#f28a2e; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
+main { max-width:460px; margin:0 auto; padding:max(28px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left)); display:grid; gap:18px; justify-items:center; text-align:center; }
+img.icon { width:132px; height:132px; border-radius:30px; border:2px solid var(--season); display:block; }
+h1 { margin:0; font-size:27px; line-height:1.15; letter-spacing:.01em; }
+p { margin:0; color:var(--ink2); }
+.btn { display:block; width:100%; border:0; border-radius:10px; padding:15px; font:700 17px/1 inherit; text-decoration:none; cursor:pointer; }
+.install { background:var(--c); color:#0a1013; }
+.open { background:transparent; color:var(--ink); border:1.5px solid var(--line); }
+.how { width:100%; background:var(--panel); border:1.5px solid color-mix(in srgb,var(--season) 60%,var(--line)); border-radius:10px; padding:14px 16px; text-align:left; display:grid; gap:10px; }
+.how b { color:var(--ink); }
+.how div { color:var(--ink2); }
+[hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<main>
+  <img class="icon" src="icon-512.png" alt="NNR gauge" width="132" height="132">
+  <h1>NNR Live Jobs</h1>
+  <p>Every job on location, live from the stage emails.</p>
+  <button class="btn install" id="install" type="button" hidden>Put the NNR gauge on my home screen</button>
+  <div class="how" id="how">
+    <div id="android"><b>Android / Samsung:</b> tap the three dots &#8942; at the top right, then <b>Add to Home screen</b> or <b>Install app</b>.</div>
+    <div id="iphone"><b>iPhone:</b> tap Share &#8679; at the bottom, then <b>Add to Home Screen</b>.</div>
+    <div>The NNR gauge lands on your home screen. Tap it and your page opens.</div>
+  </div>
+  <a class="btn open" href="https://claude.ai/artifact/3MyeewPLZ6N9vU3q9zfHC6">Open it now</a>
+</main>
+<script>
+(function(){
+  var ua = navigator.userAgent || '';
+  var ios = /iPhone|iPad|iPod/.test(ua);
+  if (ios) document.getElementById('android').hidden = true;
+  else if (/Android/.test(ua)) document.getElementById('iphone').hidden = true;
+  if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js'); } catch (e) {} }
+  var deferred = null, btn = document.getElementById('install');
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferred = e; btn.hidden = false; });
+  btn.addEventListener('click', function(){
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.then(function(){ deferred = null; btn.hidden = true; });
+  });
+  window.addEventListener('appinstalled', function(){ btn.hidden = true; });
+})();
+</script>
+</body>
+</html>
