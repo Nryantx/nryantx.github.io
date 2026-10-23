@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a1013">
+<title>NNR Call · Oct 23</title>
+<meta name="description" content="Nathan, Erik, Cory and Eric: pages, schedule changes and what needs a yes.">
+<link rel="icon" type="image/png" href="../nathan/icon-192.png">
+<link rel="apple-touch-icon" href="../nathan/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script>/* Box outlines follow the season, same as the NNR dashboards. */
+(function(){var d=new Date(),m=d.getMonth()+1,day=d.getDate(),k=m*100+day,s;
+if(k>=1001&&k<=1105)s='#e07b24';else if(k>=1106&&k<=1130)s='#b8662f';else if(m===12)s='#2e9a5c';
+else if(m===1||(m===2&&day<=14))s='#9fb6d4';else if(m===2||m===3)s='#e9e3f2';else if(m===4)s='#4a74d8';
+else if(m===5||m===6)s='#6cbf6f';else if(m===7)s='#c8453c';else if(m===8)s='#d9a62c';else s='#bf5700';
+document.documentElement.style.setProperty('--season',s);})();</script>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0a1013;--panel:#10191e;--panel2:#15222a;--line:#213039;--line2:#2c3f4a;
+  --ink:#e4ecef;--ink2:#98abb4;--ink3:#61747e;
+  --amber:#f2b544;--red:#ff5d52;--green:#63d38e;--cyan:#45c4e8;--violet:#a68bff;
+  --season:#e07b24;
+  --edge:color-mix(in srgb,var(--season) 60%,var(--line));
+  --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding:max(24px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 56px max(16px,env(safe-area-inset-left));display:grid;gap:18px}
+.eyebrow{margin:0;font:600 12px/1.3 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
+h1{margin:6px 0 0;font:800 clamp(44px,12vw,76px)/.92 var(--f-display);text-transform:uppercase;text-wrap:balance}
+h2{margin:0;font:800 26px/1 var(--f-display);letter-spacing:.03em;text-transform:uppercase}
+.who{margin:10px 0 0;color:var(--ink2)}
+.who b{color:var(--ink);font-weight:600}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 18px;border-radius:6px;font:700 16px/1 var(--f-body);text-decoration:none}
+.btn.go{background:var(--amber);color:#1b1404}
+.btn.ghost{border:1.5px solid var(--line2);color:var(--ink)}
+.note{margin:8px 0 0;color:var(--ink2);font-size:14px}
+.box{background:var(--panel);border:1.5px solid var(--edge);border-radius:8px;padding:16px;display:grid;gap:12px;min-width:0}
+.sub{margin:0;color:var(--ink2);font-size:14.5px}
+/* pages */
+.pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:8px}
+.pg{display:grid;gap:2px;padding:12px 14px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.pg:hover{border-color:var(--edge)}
+.pg b{font-weight:600}
+.pg span{color:var(--ink2);font-size:13px}
+.pg em{font-style:normal;font:500 11px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--amber);margin-top:4px}
+/* agenda */
+ol.plan{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:c}
+ol.plan li{counter-increment:c;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;background:var(--panel2);border-radius:6px;padding:10px 12px}
+ol.plan li::before{content:counter(c);font:800 24px/1 var(--f-display);color:var(--amber);grid-row:span 2}
+ol.plan b{font-weight:600}
+ol.plan small{grid-column:2;color:var(--ink2);font-size:13.5px}
+ol.plan .min{grid-column:3;grid-row:1;font:500 12px/1 var(--f-mono);color:var(--ink3);white-space:nowrap}
+/* moved */
+.moved{display:grid;gap:6px}
+.mv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:10px 12px;border-radius:6px;background:var(--panel2)}
+.mv b{font-weight:600}
+.mv .to{font:500 13.5px/1.3 var(--f-mono);color:var(--green);text-align:right;white-space:nowrap}
+.mv .from{grid-column:1/-1;font-size:13px;color:var(--ink3)}
+.mv .from s{color:var(--ink2)}
+/* gantt */
+.gantt{display:grid;gap:4px}
+.g-head,.g-row{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr);gap:8px;align-items:center}
+.g-months{position:relative;height:16px;font:500 10.5px/16px var(--f-mono);color:var(--ink3)}
+.g-months span{position:absolute;top:0;padding-left:3px;border-left:1px solid var(--line2);height:16px}
+.g-name{font-size:13px;line-height:1.2;min-width:0}
+.g-name small{display:block;color:var(--ink3);font-size:11.5px}
+.g-track{position:relative;height:22px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/6 - 1px),var(--line) calc(100%/6 - 1px),var(--line) calc(100%/6));border-radius:3px}
+.g-band{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--red) 13%,transparent)}
+.g-bar{position:absolute;top:3px;height:16px;border-radius:3px;min-width:4px;background:var(--c,var(--cyan))}
+.g-bar.open{background:repeating-linear-gradient(45deg,var(--c) 0 6px,color-mix(in srgb,var(--c) 45%,transparent) 6px 10px)}
+.g-bar.tbd{background:transparent;border:1.5px dashed var(--c)}
+.g-relief{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--amber)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:14px;height:10px;border-radius:2px}
+/* schedule list */
+.jobs{display:grid;gap:6px}
+.job{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:10px 12px;border-radius:6px;background:var(--panel2);border-left:4px solid var(--c,var(--ink3))}
+.job b{font-weight:600}
+.job .d{font:500 13px/1.3 var(--f-mono);color:var(--ink2)}
+.job .crew{grid-column:1/-1;font-size:13.5px;color:var(--ink2)}
+.job .tagline{grid-column:1/-1;font-size:12.5px;color:var(--amber)}
+.seat{font:600 12px/1 var(--f-body);padding:5px 9px;border-radius:999px;white-space:nowrap;justify-self:end}
+.seat.full{color:var(--green);border:1px solid var(--green)}
+.seat.open{color:#1b1404;background:var(--amber)}
+.month{margin:6px 0 0;font:600 12px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.tally{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:6px}
+.tally div{padding:10px 12px;border-left:1px solid var(--line);min-width:0}
+.tally div:first-child{border-left:0}
+.tally b{display:block;font:800 34px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.tally span{display:block;margin-top:4px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+/* needs a yes */
+.grp{display:grid;gap:6px}
+.grp h3{margin:6px 0 0;font:700 18px/1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+.ck{display:grid;grid-template-columns:24px minmax(0,1fr);gap:2px 10px;align-items:start;padding:10px 12px;border-radius:6px;background:var(--panel2);cursor:pointer}
+.ck input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--green)}
+.ck b{font-weight:600}
+.ck small{grid-column:2;display:block;color:var(--ink2);font-size:13.5px}
+.ck .ask{color:var(--amber);font:500 11px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;margin-left:6px;white-space:nowrap}
+.ck:has(input:checked){opacity:.55}
+.ck:has(input:checked) b{text-decoration:line-through}
+.count{font:500 12px/1 var(--f-mono);color:var(--ink3)}
+footer{color:var(--ink3);font-size:13px;border-top:1px solid var(--line);padding-top:12px;display:grid;gap:4px}
+@media (max-width:520px){
+  .g-head,.g-row{grid-template-columns:minmax(0,6.6em) minmax(0,1fr)}
+  .g-name small{display:none}
+  ol.plan li{grid-template-columns:28px minmax(0,1fr)}
+  ol.plan .min{grid-column:2;grid-row:auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">NNR Consulting · working through McKee</p>
+  <h1>Call · Fri Oct 23</h1>
+  <p class="who"><b>Nathan</b> · <b>Erik</b> · <b>Cory</b> · <b>Eric</b> &nbsp;·&nbsp; time from the group text</p>
+  <div class="acts">
+    <a class="btn go" href="https://meet1754273289036-6310.webex.com/join/pr25565652046" target="_blank" rel="noopener">Join on WebEx</a>
+  </div>
+  <p class="note">Only needed if we pull up a page together. No WebEx account needed; it opens in your browser or the Webex app. A plain group call works too.</p>
+</header>
+
+<section class="box" aria-labelledby="h-pages">
+  <h2 id="h-pages">Open your page</h2>
+  <p class="sub">Tap yours, then add it to your home screen. The NNR gauge lands on your phone and opens straight to it.</p>
+  <div class="pages">
+    <a class="pg" href="../cory/"><b>Cory</b><span>NNR Monthly for McKee</span><em>Your page</em></a>
+    <a class="pg" href="../erik/"><b>Erik</b><span>Erik's Dashboard</span><em>Your page</em></a>
+    <a class="pg" href="../eric/"><b>Eric</b><span>Eric Smith's Dashboard</span><em>Your page</em></a>
+    <a class="pg" href="../crew/"><b>The crew page</b><span>What every consultant sees</span><em>Everyone</em></a>
+  </div>
+</section>
+
+<section class="box" aria-labelledby="h-plan">
+  <h2 id="h-plan">The plan · about 30 min</h2>
+  <ol class="plan">
+    <li><b>Everyone opens their page</b><span class="min">5 min</span><small>On the phone, on the home screen, and what each one shows.</small></li>
+    <li><b>What moved</b><span class="min">3 min</span><small>Four jobs changed dates. Make sure we all have the same calendar.</small></li>
+    <li><b>Leads, open seats and backups</b><span class="min">10 min</span><small>A lead on every job, 17 seats still open, 2 backups per job.</small></li>
+    <li><b>Relief on the long jobs</b><span class="min">5 min</span><small>Crew changes around day 14 on Walker, Chance, Angell Ranch and Lightfoot.</small></li>
+    <li><b>McKee items</b><span class="min">5 min</span><small>Paperwork the crew needs before Walker starts Nov 4.</small></li>
+    <li><b>Monday's crew call</b><span class="min">2 min</span><small>Mon Oct 26, 10 am CT, then the last Monday of every month.</small></li>
+  </ol>
+</section>
+
+<section class="box" aria-labelledby="h-moved">
+  <h2 id="h-moved">What moved</h2>
+  <div class="moved">
+    <div class="mv"><b>Walker · V-F</b><span class="to">Nov 4–23</span><span class="from">was <s>Nov 6–25</s></span></div>
+    <div class="mv"><b>Peridot 8 #15H &amp; #4H zipper · Mack</b><span class="to">Nov 9–21</span><span class="from">was <s>Oct 19</s> start, pushed by Mack</span></div>
+    <div class="mv"><b>Angell Ranch 6-well · V-F</b><span class="to">Jan 4–Feb 5</span><span class="from">was <s>Nov 28–Dec 30</s></span></div>
+    <div class="mv"><b>Lightfoot · V-F</b><span class="to">Feb 8–27</span><span class="from">was <s>Jan 14–Feb 2</s></span></div>
+    <div class="mv"><b>New: 3Span, 2 wells back to back</b><span class="to">~Feb 4–20</span><span class="from">from Cudd's Oct 8 email; end date is a guess, not on the calendar yet</span></div>
+    <div class="mv"><b>New: Mack's 2027 list</b><span class="to">Feb–Apr</span><span class="from">Pincourt, Cold Lake, Anchorage, Peridot 5; Peridot 8 Pad #2 has no date</span></div>
+  </div>
+</section>
+
+<section class="box" aria-labelledby="h-sched">
+  <h2 id="h-sched">Nov through April</h2>
+  <div class="tally">
+    <div><b>13</b><span>jobs on the books</span></div>
+    <div><b style="color:var(--amber)">17</b><span>seats open with dates</span></div>
+    <div><b style="color:var(--red)">5</b><span>open Nov–Dec</span></div>
+  </div>
+  <div class="gantt" id="gantt" aria-label="Job timeline, November 2026 to April 2027"></div>
+  <div class="legend">
+    <span><i style="background:var(--cyan)"></i>Crew full</span>
+    <span><i style="background:repeating-linear-gradient(45deg,var(--amber) 0 4px,color-mix(in srgb,var(--amber) 40%,transparent) 4px 7px)"></i>Seats open</span>
+    <span><i style="border:1.5px dashed var(--violet)"></i>Not firm</span>
+    <span><i style="background:var(--amber);width:3px"></i>Crew change ~day 14</span>
+    <span><i style="background:color-mix(in srgb,var(--red) 30%,transparent)"></i>Stretched thin</span>
+  </div>
+  <div class="jobs" id="jobs"></div>
+</section>
+
+<section class="box" aria-labelledby="h-yes">
+  <h2 id="h-yes">Needs a yes on the call</h2>
+  <p class="sub">Tick them off as we go. The ticks stay on your phone only. <span class="count" id="ck-count"></span></p>
+
+  <div class="grp">
+    <h3>Leads &amp; seats</h3>
+    <label class="ck"><input type="checkbox" data-k="lead-chance"><div><b>Chance, Dec 7–26: Nathan leads</b><small>Free after Mapache ends Dec 4. Still 2 seats open, and the operator (Cypress?) isn't confirmed.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="lead-mack27"><div><b>Mack 2027 jobs: Eric leads</b><small>Pincourt, Cold Lake, Anchorage, Peridot 5 and Peridot 8 Pad #2.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="lead-3span"><div><b>3Span Feb pair: who leads?</b><small>Nathan is on Angell Ranch and Lightfoot then, so it can't be him. Erik is free. 3Span has been Nathan and Tommy Goforth so far.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="alberta"><div><b>Alberta zipper, Dec 10–15: 3 seats</b><small>1 days, 2 nights next to Eric. Erik is free after Peridot wraps Nov 21.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="backups"><div><b>2 backups on every job</b><small>Backups cover shift-outs. Never shift 2 out at once.</small></div></label>
+  </div>
+
+  <div class="grp">
+    <h3>Dates to pin down</h3>
+    <label class="ck"><input type="checkbox" data-k="peridot-date"><div><b>Peridot #1: Nov 9 or Nov 10?</b><small>The schedule and the job notes say Nov 9–21. The Work Calendar block shows Nov 10–22.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="mapache"><div><b>Mapache: still Thanksgiving?</b><small>Cudd says it may slide earlier. Nathan is on Walker through Nov 23.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="pad2"><div><b>Peridot 8 Pad #2 date</b><small>#16H &amp; #17H. Anything from Wilbur?</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="3span-cal"><div><b>3Span Feb pair: firm enough for the calendar?</b><small>Only Cudd's Oct 8 email so far.</small></div></label>
+  </div>
+
+  <div class="grp">
+    <h3>Relief on long jobs</h3>
+    <label class="ck"><input type="checkbox" data-k="relief"><div><b>Crew change around day 14</b><small>Walker (20 days) ~Nov 18 · Chance (20) ~Dec 21 · Angell Ranch (33) ~Jan 18 · Lightfoot (20) ~Feb 22.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="vf-four"><div><b>Same 4 men on all 3 V-F jobs</b><small>Nathan, Adam, Louis and Ed: 73 days on location Nov–Feb. Who rotates in?</small></div></label>
+  </div>
+
+  <div class="grp">
+    <h3>Crew</h3>
+    <label class="ck"><input type="checkbox" data-k="louis"><div><b>Louis Carter: resume</b><small>On all 3 V-F jobs with no resume on file yet.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="adam"><div><b>Adam Gern: confirm Walker</b><small>Hasn't answered the calendar invite yet. Ed has.</small></div></label>
+  </div>
+
+  <div class="grp">
+    <h3>McKee <span class="ask">Cory</span></h3>
+    <label class="ck"><input type="checkbox" data-k="dd"><div><b>Direct deposit form</b><small>Nathan sets his up first, then writes the how-to for the crew.</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="paperwork"><div><b>What each man needs before Nov 4</b><small>Walker and Peridot bring on Adam, Louis, Ed, Ronnie and Chris. What does McKee need from them before day one?</small></div></label>
+  </div>
+
+  <div class="grp">
+    <h3>Crew calls</h3>
+    <label class="ck"><input type="checkbox" data-k="oct26"><div><b>Monday Oct 26, 10 am CT</b><small>Invite went to 20 men. Cory, do you want a few minutes on it?</small></div></label>
+    <label class="ck"><input type="checkbox" data-k="host"><div><b>Who hosts the monthly when Nathan's on location?</b><small>Last Monday, 10 am CT. Nathan is on a job Nov 30, Jan 25 and Feb 22.</small></div></label>
+  </div>
+</section>
+
+<footer>
+  <span>As of Thu Oct 22, 2026, from the Work Schedule. The crew page and your dashboard always have the live version.</span>
+  <span>No rates or pay on this page.</span>
+</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var OP = { vf:"#45c4e8", mack:"#a68bff", span:"#63d38e", cyp:"#f07fb0" };
+  // [name, operator, short op, start, end, crew, open, firm, note]
+  var JOBS = [
+    ["Walker","vf","V-F · Cudd XL","2026-11-04","2026-11-23","Nathan, Adam Gern, Louis Carter, Ed Gern",0,true,""],
+    ["Peridot 8 #15H & #4H zipper","mack","Mack · Pharaoh","2026-11-09","2026-11-21","Erik, Eric Smith, Ronnie Dooley (WL), Chris Jimenez",0,true,""],
+    ["Mapache Grande 008B-1H","span","3Span · Cudd","2026-11-26","2026-12-04","Nathan, Tommy Goforth",0,true,"Starts Thanksgiving; may slide earlier"],
+    ["Chance, 3 wells","cyp","NM · Cypress?","2026-12-07","2026-12-26","",2,false,"Operator not confirmed"],
+    ["Alberta Fed Com zipper","mack","Mack","2026-12-10","2026-12-15","Eric Smith",3,true,""],
+    ["Angell Ranch 6-well","vf","V-F · Eddy Co.","2027-01-04","2027-02-05","Nathan, Adam Gern, Louis Carter, Ed Gern",0,true,""],
+    ["3Span, 2 wells","span","3Span · tentative","2027-02-04","2027-02-20","",2,false,"Cudd email only"],
+    ["Lightfoot","vf","V-F","2027-02-08","2027-02-27","Nathan, Adam Gern, Louis Carter, Ed Gern",0,true,""],
+    ["Pincourt Federal #1H","mack","Mack","2027-02-19","2027-02-22","",2,false,"Start estimated"],
+    ["Cold Lake Federal #2H","mack","Mack","2027-03-19","2027-03-22","",2,false,"Start estimated"],
+    ["Anchorage San Andres","mack","Mack","2027-03-26","2027-03-29","",2,false,"Start estimated"],
+    ["Peridot 5 #18H & #8H zipper","mack","Mack","2027-04-14","2027-04-19","",4,false,"Start estimated"],
+    ["Peridot 8 Pad #2","mack","Mack","","","",4,false,"No date yet"]
+  ];
+  var BANDS = [["2026-12-10","2026-12-15"],["2027-02-04","2027-02-22"]];
+  var T0 = Date.UTC(2026,10,1), T1 = Date.UTC(2027,4,1), SPAN = T1 - T0, DAY = 864e5;
+  function t(s){ var p=s.split("-"); return Date.UTC(+p[0],+p[1]-1,+p[2]); }
+  function pct(ms){ return Math.max(0,Math.min(100,(ms-T0)/SPAN*100)); }
+  var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function fmt(a,b){ var A=new Date(t(a)),B=new Date(t(b)); var s=MON[A.getUTCMonth()]+" "+A.getUTCDate(); return s+"–"+(A.getUTCMonth()===B.getUTCMonth()?"":MON[B.getUTCMonth()]+" ")+B.getUTCDate(); }
+  function el(tag,cls,txt){ var n=document.createElement(tag); if(cls) n.className=cls; if(txt!=null) n.textContent=txt; return n; }
+
+  // timeline
+  var g = document.getElementById("gantt");
+  var head = el("div","g-head"); head.appendChild(el("div"));
+  var months = el("div","g-months");
+  ["Nov","Dec","Jan","Feb","Mar","Apr"].forEach(function(m,i){ var s=el("span",null,m); s.style.left=(i*100/6)+"%"; months.appendChild(s); });
+  head.appendChild(months); g.appendChild(head);
+  JOBS.forEach(function(j){
+    var row = el("div","g-row");
+    var nm = el("div","g-name",j[0]); nm.appendChild(el("small",null,j[2])); row.appendChild(nm);
+    var tr = el("div","g-track");
+    BANDS.forEach(function(b){ var x=el("div","g-band"); x.style.left=pct(t(b[0]))+"%"; x.style.width=(pct(t(b[1])+DAY)-pct(t(b[0])))+"%"; tr.appendChild(x); });
+    if (j[3]) {
+      var bar = el("div","g-bar"+(j[6]?" open":"")+(!j[7]&&!j[6]?" tbd":""));
+      bar.style.setProperty("--c", j[6] ? "var(--amber)" : OP[j[1]]);
+      if (!j[7] && j[6]) bar.style.outline = "1.5px dashed "+OP[j[1]];
+      bar.style.left = pct(t(j[3]))+"%"; bar.style.width = (pct(t(j[4])+DAY)-pct(t(j[3])))+"%";
+      bar.title = j[0]+" · "+fmt(j[3],j[4])+(j[6]?" · "+j[6]+" open":"");
+      tr.appendChild(bar);
+      var days = (t(j[4])-t(j[3]))/DAY+1;
+      if (days >= 18) { var r=el("div","g-relief"); r.style.left=pct(t(j[3])+14*DAY)+"%"; r.title="Crew change ~day 14"; tr.appendChild(r); }
+    } else {
+      var nd = el("div","g-bar tbd"); nd.style.setProperty("--c",OP[j[1]]); nd.style.left="80%"; nd.style.width="19%"; nd.title="No date yet"; tr.appendChild(nd);
+    }
+    row.appendChild(tr); g.appendChild(row);
+  });
+
+  // list
+  var box = document.getElementById("jobs"), lastM = "";
+  JOBS.forEach(function(j){
+    var m = j[3] ? (function(d){ return MON[d.getUTCMonth()]+" "+d.getUTCFullYear(); })(new Date(t(j[3]))) : "No date yet";
+    if (m !== lastM) { box.appendChild(el("p","month",m)); lastM = m; }
+    var r = el("div","job"); r.style.setProperty("--c",OP[j[1]]);
+    var n = el("div"); n.appendChild(el("b",null,j[0])); n.appendChild(document.createTextNode(" ")); n.appendChild(el("span","d",j[2]+" · "+(j[3]?fmt(j[3],j[4]):"no date")));
+    r.appendChild(n);
+    r.appendChild(el("span","seat "+(j[6]?"open":"full"), j[6] ? j[6]+" open" : "Full"));
+    r.appendChild(el("div","crew", j[5] || "Crew not picked yet"));
+    if (j[8]) r.appendChild(el("div","tagline",j[8]));
+    box.appendChild(r);
+  });
+
+  // ticks, kept on this phone only
+  var KEY = "nnr-call-1023";
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+  var boxes = Array.prototype.slice.call(document.querySelectorAll(".ck input"));
+  function count(){ var n = boxes.filter(function(b){ return b.checked; }).length; document.getElementById("ck-count").textContent = n + " of " + boxes.length + " done"; }
+  boxes.forEach(function(b){
+    b.checked = !!saved[b.dataset.k];
+    b.addEventListener("change", function(){ saved[b.dataset.k] = b.checked; try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} count(); });
+  });
+  count();
+})();
+</script>
+</body>
+</html>
