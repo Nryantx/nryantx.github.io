@@ -1,0 +1,907 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="color-scheme" content="dark"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Golf Crew Tee Sheet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: same control-room board as Nathan's dashboard. Top strip, wide calendar + narrow rail, course board, then money / trip / meet-up / clubhouse.
+   Dark only on purpose. Box outlines take the season color (set in script from today's date). */
+:root{
+  color-scheme: dark;
+  --bg:#0a1013; --panel:#10191e; --panel2:#15222a; --line:#213039; --line2:#2c3f4a;
+  --ink:#e4ecef; --ink2:#98abb4; --ink3:#61747e;
+  --cyan:#45c4e8; --red:#ff5d52; --amber:#f2b544; --green:#63d38e;
+  --cyan-bg:rgba(69,196,232,.15); --amber-bg:rgba(242,181,68,.13); --red-bg:rgba(255,93,82,.13); --green-bg:rgba(99,211,142,.13);
+  --season:#f28a2e; --season-soft:rgba(242,138,46,.38); --season-bg:rgba(242,138,46,.10);
+  --f-display:"Big Shoulders Display","Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:4px;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font:400 14px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1380px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 90px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px;padding-bottom:14px;border-bottom:1px solid var(--season-soft)}
+.top h1{font:800 42px/0.95 var(--f-display);letter-spacing:.01em;text-transform:uppercase}
+.top h1 span{color:var(--season)}
+.eyebrow{font:500 11px/1.4 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-top:6px}
+.eyebrow b{color:var(--ink2);font-weight:500}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.who{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--season-soft);border-radius:var(--r);padding:6px 8px}
+.who label{font:500 10.5px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.who select{background:var(--panel2);border:1px solid var(--line2);border-radius:3px;padding:6px 8px;min-width:9em}
+.who.need{border-color:var(--season);box-shadow:0 0 0 3px var(--season-bg)}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;background:var(--panel)}
+.seg button{background:transparent;border:0;padding:8px 11px;font:500 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.seg button+button{border-left:1px solid var(--line2)}
+.seg button[aria-pressed="true"]{background:var(--season);color:var(--bg)}
+.seg button:not([aria-pressed="true"]):hover{background:var(--panel2);color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--r);padding:8px 12px;font:500 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);cursor:pointer;white-space:nowrap;text-decoration:none}
+.btn:hover{border-color:var(--ink3);text-decoration:none}
+.btn.primary{background:var(--season);border-color:var(--season);color:var(--bg)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.sm{padding:6px 8px;font-size:11px}
+.btn.on{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.btn[disabled]{opacity:.5;cursor:default}
+
+.banner{margin-top:12px;padding:10px 12px;border:1px dashed var(--season-soft);border-radius:var(--r);background:var(--panel);color:var(--ink2);font-size:13px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.banner b{color:var(--ink);font-weight:600}
+
+/* sections */
+.slots{display:grid;gap:16px;margin-top:16px}
+.cols{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:16px;align-items:start}
+.stack{display:grid;gap:16px;align-content:start;min-width:0}
+.sec{background:var(--panel);border:1px solid var(--line);border-color:var(--season-soft);border-radius:var(--r);min-width:0}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px 10px;padding:12px 14px 10px;border-bottom:1px solid var(--line)}
+.sec-h h2{font:700 20px/1 var(--f-display);letter-spacing:.04em;text-transform:uppercase}
+.meta{font:400 11px/1.3 var(--f-mono);color:var(--ink3);letter-spacing:.04em}
+.meta.live::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;vertical-align:1px}
+.meta.local::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);margin-right:6px;vertical-align:1px}
+.sec-b{padding:12px 14px 14px;min-width:0}
+.lbl{font:500 10.5px/1.3 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.sub{color:var(--ink3);font-size:12px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font:500 10px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;border-radius:3px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
+.tag.green{color:var(--green);border-color:rgba(99,211,142,.4);background:var(--green-bg)}
+.tag.amber{color:var(--amber);border-color:rgba(242,181,68,.4);background:var(--amber-bg)}
+.tag.red{color:var(--red);border-color:rgba(255,93,82,.45);background:var(--red-bg)}
+.tag.season{color:var(--season);border-color:var(--season-soft);background:var(--season-bg)}
+.empty{color:var(--ink3);font-size:13px;padding:6px 0}
+
+/* top strip */
+.today{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.today>div{padding:14px 16px;min-width:0;border-left:1px solid var(--line)}
+.today>div:first-child{border-left:0}
+.big{font:800 34px/1 var(--f-display);text-transform:uppercase;letter-spacing:.01em;margin-top:6px}
+.big.season{color:var(--season)}
+.cap{margin-top:6px;color:var(--ink2);font-size:13px}
+.cap b{color:var(--ink);font-weight:600}
+.bestlist{display:grid;gap:5px;margin-top:8px}
+.bestlist li{display:flex;gap:8px;align-items:baseline;font-size:13px;min-width:0}
+.bestlist .d{font:600 12px/1 var(--f-mono);color:var(--season);white-space:nowrap}
+.bestlist .n{color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* calendar */
+.calbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mnav{display:flex;align-items:center;gap:6px}
+.mname{font:700 20px/1 var(--f-display);letter-spacing:.04em;text-transform:uppercase;min-width:10ch;text-align:center}
+.hint{font-size:12px;color:var(--ink3)}
+.gridwrap{overflow-x:auto}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);min-width:330px}
+.dow{font:500 10px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);padding:6px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel2)}
+.cell{position:relative;min-height:96px;padding:4px 5px 6px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-width:0;cursor:pointer;display:flex;flex-direction:column;gap:3px}
+.cell.wknd{background:rgba(255,255,255,.015)}
+.cell.past{cursor:default;opacity:.45}
+.cell:not(.past):hover{background:var(--season-bg)}
+.cell.mine{box-shadow:inset 0 0 0 2px var(--season)}
+.cell.drop{outline:2px dashed var(--cyan);outline-offset:-3px;background:var(--cyan-bg)}
+.cell .top1{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.dn{font:500 11px/1 var(--f-mono);color:var(--ink2);font-variant-numeric:tabular-nums;padding:2px 3px;border-radius:2px}
+.cell.is-today .dn{background:var(--season);color:var(--bg);font-weight:600}
+.cnt{font:600 10px/1 var(--f-mono);padding:2px 4px;border-radius:2px;color:var(--ink3)}
+.cnt.h1{color:var(--ink2);background:var(--panel2)}
+.cnt.h2{color:var(--bg);background:var(--amber)}
+.cnt.h3{color:var(--bg);background:var(--green)}
+.inits{display:flex;flex-wrap:wrap;gap:2px}
+.inits i{font:600 9px/1 var(--f-mono);font-style:normal;padding:2px 3px;border-radius:2px;background:var(--panel2);color:var(--ink2);border:1px solid var(--line2)}
+.inits i.me{background:var(--season);color:var(--bg);border-color:var(--season)}
+.inits i.trip{border-style:dashed;color:var(--cyan)}
+.chip{display:block;width:100%;text-align:left;border:0;border-left:3px solid var(--cyan);background:var(--cyan-bg);color:var(--ink);font:500 11px/1.25 var(--f-body);padding:3px 5px;border-radius:2px;cursor:grab;touch-action:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip b{font:600 10.5px/1 var(--f-mono);color:var(--cyan);margin-right:4px}
+.ghost{position:fixed;z-index:60;pointer-events:none;padding:5px 9px;border-radius:3px;background:var(--cyan);color:var(--bg);font:600 12px/1.2 var(--f-body);box-shadow:0 6px 20px rgba(0,0,0,.5);max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transform:translate(10px,10px)}
+body.dragging{cursor:grabbing;user-select:none;-webkit-user-select:none}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:12px;color:var(--ink3)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:9px;border-radius:2px;display:inline-block}
+.copybar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:12px;padding:10px 12px;border:1px solid var(--season-soft);background:var(--season-bg);border-radius:var(--r);font-size:13px}
+.copybar textarea{width:100%;min-height:54px;background:var(--panel2);border:1px solid var(--line2);border-radius:3px;padding:8px;font:400 12.5px/1.4 var(--f-mono);resize:vertical}
+
+/* round editor */
+.editor{border:1px solid var(--cyan);background:var(--panel2);border-radius:var(--r);padding:12px;margin-bottom:12px;display:grid;gap:10px}
+.editor h3{font:700 16px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
+.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.field{display:grid;gap:4px;min-width:0}
+.field input,.field select,.field textarea{background:var(--panel);border:1px solid var(--line2);border-radius:3px;padding:7px 8px;width:100%;min-width:0}
+.pchips{display:flex;flex-wrap:wrap;gap:6px}
+.pchips button{background:var(--panel);border:1px solid var(--line2);border-radius:999px;padding:5px 10px;font-size:12.5px;cursor:pointer}
+.pchips button[aria-pressed="true"]{background:var(--cyan);border-color:var(--cyan);color:var(--bg);font-weight:600}
+.erow{display:flex;flex-wrap:wrap;gap:8px}
+
+/* groups */
+.grp{display:grid;gap:10px}
+.grp>div{display:grid;gap:6px}
+.grp h3{font:700 15px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);display:flex;align-items:center;gap:8px}
+.names{display:flex;flex-wrap:wrap;gap:6px}
+.names span{padding:4px 9px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);font-size:13px}
+.names span.in{border-color:var(--green);color:var(--green)}
+
+/* weather */
+.wx{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wx>div{border:1px solid var(--line);border-radius:3px;padding:8px 6px;display:grid;gap:3px;text-align:center;min-width:0}
+.wx .d{font:600 11px/1 var(--f-mono);color:var(--ink2);letter-spacing:.04em}
+.wx .t{font:700 20px/1 var(--f-display)}
+.wx .t small{font:500 12px/1 var(--f-mono);color:var(--ink3)}
+.wx .r,.wx .w{font:400 10.5px/1.2 var(--f-mono);color:var(--ink3)}
+.wx .best{border-color:var(--green);background:var(--green-bg)}
+.wx .wet{border-color:rgba(255,93,82,.45);background:var(--red-bg)}
+.wx .sky{font-size:11px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* courses */
+.cfilters{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.course{border:1px solid var(--line2);border-radius:var(--r);background:var(--panel2);padding:12px;display:grid;gap:8px;align-content:start;min-width:0}
+.course h3{font:700 19px/1.05 var(--f-display);letter-spacing:.03em;text-transform:uppercase}
+.course .city{font:500 11px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.course .rate{font:600 13px/1.2 var(--f-mono);color:var(--season)}
+.course .note{font-size:13px;color:var(--ink2)}
+.course .phone{font:500 12px/1.2 var(--f-mono);color:var(--ink2);user-select:all}
+.course .acts{display:flex;flex-wrap:wrap;gap:6px}
+.course .votes{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink3)}
+.course.fav{border-color:var(--green)}
+
+/* tee times */
+.teebar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin-bottom:12px}
+.teestart{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r);padding:4px 8px}
+.teestart select{background:var(--panel2);border:1px solid var(--line2);border-radius:3px;padding:5px 6px}
+.teelist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.tee{border:1px solid var(--line2);border-radius:var(--r);background:var(--panel2);padding:10px 12px;display:grid;gap:8px;min-width:0;align-content:start}
+.tee .th{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.tee h3{font:700 17px/1.05 var(--f-display);letter-spacing:.03em;text-transform:uppercase;min-width:0}
+.tee .from{font:600 13px/1 var(--f-mono);color:var(--season);white-space:nowrap}
+.tee .where{font:500 11px/1.2 var(--f-mono);color:var(--ink3);letter-spacing:.06em;text-transform:uppercase}
+.times{display:flex;flex-wrap:wrap;gap:5px}
+.times span{font:500 12px/1 var(--f-mono);padding:5px 7px;border-radius:3px;background:var(--panel);border:1px solid var(--line2);white-space:nowrap}
+.times span b{color:var(--ink);font-weight:600;margin-right:5px}
+.times span i{font-style:normal;color:var(--green)}
+.times span.nine{border-style:dashed}
+.tee .acts{display:flex;flex-wrap:wrap;gap:6px}
+
+/* lists */
+.rows{display:grid}
+.rows li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.rows li:first-child{border-top:0}
+.rows .t{min-width:0}
+.rows .t b{font-weight:600}
+.rows .t small{display:block;color:var(--ink3);font-size:12px}
+.addform{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line2)}
+.addform input,.addform select{background:var(--panel2);border:1px solid var(--line2);border-radius:3px;padding:7px 8px;min-width:0;width:100%}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.total b{font:800 26px/1 var(--f-display);color:var(--season)}
+.spot{display:grid;gap:4px;padding:10px 0;border-top:1px solid var(--line)}
+.spot:first-child{border-top:0;padding-top:0}
+.spot h3{font:700 16px/1 var(--f-display);letter-spacing:.05em;text-transform:uppercase}
+.spot .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+
+/* clubhouse */
+.joke{border-left:3px solid var(--season);padding:8px 12px;background:var(--season-bg);border-radius:0 3px 3px 0;font-size:14px}
+.joke small{display:block;margin-top:6px;color:var(--ink3);font:400 11px/1.2 var(--f-mono)}
+.posts{display:grid;gap:8px;margin-top:12px}
+.post{border:1px solid var(--line);border-radius:3px;padding:8px 10px;display:grid;gap:3px;min-width:0}
+.post .by{font:600 11px/1 var(--f-mono);color:var(--season);letter-spacing:.04em;text-transform:uppercase}
+.post a{word-break:break-all}
+
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:4px;font:500 13px/1.2 var(--f-body);z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+
+@media (max-width:900px){
+  .cols{grid-template-columns:minmax(0,1fr)}
+  .today{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .today>div:nth-child(3){border-left:0;border-top:1px solid var(--line)}
+  .today>div:nth-child(4){border-top:1px solid var(--line)}
+}
+@media (max-width:560px){
+  .top h1{font-size:34px}
+  .cell{min-height:74px}
+  .wx{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .inits i{font-size:8px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Golf <span>Crew</span></h1>
+      <div class="eyebrow">Tee sheet · <b>The Colony to McKinney</b> · <span id="seasonName">Halloween</span> edition</div>
+    </div>
+    <div class="controls">
+      <div class="who" id="whoBox">
+        <label for="me">I am</label>
+        <select id="me"><option value="">Pick your name</option></select>
+      </div>
+    </div>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+
+  <div class="slots">
+    <section class="sec" aria-label="Summary">
+      <div class="today">
+        <div><div class="lbl">Next round</div><div class="big season" id="nextWhen">—</div><div class="cap" id="nextWhat">Nothing booked yet.</div></div>
+        <div><div class="lbl">Best days so far</div><ul class="bestlist" id="bestDays"></ul></div>
+        <div><div class="lbl">Best golf morning</div><div class="big" id="wxBest">—</div><div class="cap" id="wxBestCap"></div></div>
+        <div><div class="lbl">Crew checked in</div><div class="big" id="crewIn">0 / 10</div><div class="cap" id="crewInCap">Pick your name, then tap the days you can play.</div></div>
+      </div>
+    </section>
+
+    <section class="sec" id="teeSec">
+      <div class="sec-h"><h2>Tee times now</h2><span class="meta" id="teeMeta"></span></div>
+      <div class="sec-b">
+        <div class="teebar">
+          <div class="seg" role="group" aria-label="Day" id="teeDay"></div>
+          <div class="seg" role="group" aria-label="Players" id="teePlayers"></div>
+          <label class="teestart"><span class="lbl">From</span><select id="teeStart" aria-label="Start of 3-hour window"></select><span class="sub" id="teeTo"></span></label>
+          <div class="seg" role="group" aria-label="Distance" id="teeDist"></div>
+          <div class="seg" role="group" aria-label="Sort" id="teeSort"></div>
+        </div>
+        <div class="teelist" id="teeList"></div>
+        <p class="sub" style="margin-top:10px">Prices are per player from GolfNow and change fast. Tap Book to grab the time on GolfNow. Courses that only post on their own site (Tribute, Old American, Stevens Park, Indian Creek, Watters Creek) are in Courses below.</p>
+      </div>
+    </section>
+
+    <div class="cols">
+      <div class="stack">
+        <section class="sec" id="calSec">
+          <div class="sec-h"><h2>When can you play?</h2><span class="meta" id="syncMeta">Loading</span></div>
+          <div class="sec-b">
+            <div id="editor"></div>
+            <div class="calbar">
+              <div class="seg" role="group" aria-label="What you're marking">
+                <button type="button" id="modeGolf" aria-pressed="true">Local rounds</button>
+                <button type="button" id="modeTrip" aria-pressed="false">Trip days</button>
+              </div>
+              <div class="mnav">
+                <button class="btn sm" type="button" id="prev" aria-label="Earlier weeks">◀</button>
+                <span class="mname" id="mname"></span>
+                <button class="btn sm" type="button" id="next" aria-label="Later weeks">▶</button>
+              </div>
+              <button class="btn sm primary" type="button" id="addRound">+ Add a round</button>
+            </div>
+            <div class="gridwrap"><div class="mgrid" id="grid"></div></div>
+            <div class="legend">
+              <span><i class="sw" style="background:var(--season)"></i>Your days</span>
+              <span><i class="sw" style="background:var(--green)"></i>6+ open</span>
+              <span><i class="sw" style="background:var(--amber)"></i>4–5 open</span>
+              <span><i class="sw" style="background:var(--cyan-bg);box-shadow:inset 3px 0 0 var(--cyan)"></i>Booked round (drag it to move)</span>
+            </div>
+            <div class="copybar" id="copyBar" hidden>
+              <div style="flex:1 1 260px;min-width:0"><b>Send your days to the group text.</b> <span class="sub" id="copyWhy"></span></div>
+              <button class="btn sm primary" type="button" id="copyDays">Copy my days</button>
+              <textarea id="copyText" readonly aria-label="Your days, ready to paste"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="sec">
+          <div class="sec-h"><h2>Courses</h2><span class="meta">Rates are posted weekend rack rates · tap Book for live times</span></div>
+          <div class="sec-b">
+            <div class="cfilters">
+              <div class="seg" role="group" aria-label="Area" id="areaSeg"></div>
+              <div class="seg" role="group" aria-label="How many players" id="sizeSeg">
+                <button type="button" data-n="1" aria-pressed="false">1</button>
+                <button type="button" data-n="2" aria-pressed="false">2</button>
+                <button type="button" data-n="4" aria-pressed="true">4</button>
+              </div>
+            </div>
+            <div class="cgrid" id="courses"></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="sec">
+          <div class="sec-h"><h2>The groups</h2><span class="meta">Green = marked a day this month</span></div>
+          <div class="sec-b grp" id="groups"></div>
+        </section>
+
+        <section class="sec">
+          <div class="sec-h"><h2>Weather</h2><span class="meta" id="wxMeta"></span></div>
+          <div class="sec-b"><div class="wx" id="wx"></div><p class="sub" style="margin-top:8px">Green = light wind and little rain. Red = 50%+ rain.</p></div>
+        </section>
+
+        <section class="sec" id="statsSec" hidden>
+          <div class="sec-h"><h2>Nate's Arccos</h2><span class="meta" id="statsMeta"></span></div>
+          <div class="sec-b" id="stats"></div>
+        </section>
+
+        <section class="sec">
+          <div class="sec-h"><h2>Who owes</h2><span class="meta">Venmo, Zelle or cash</span></div>
+          <div class="sec-b">
+            <div class="total"><span class="lbl">Still unpaid</span><b class="mono" id="owedTotal">$0</b></div>
+            <ul class="rows" id="owes"></ul>
+            <form class="addform" id="oweForm">
+              <input id="oweWho" placeholder="Who" aria-label="Who owes" list="rosterList" required>
+              <input id="oweTo" placeholder="Pays who" aria-label="Pays who" list="rosterList" required>
+              <input id="oweAmt" placeholder="$ amount" aria-label="Amount" inputmode="decimal">
+              <input id="oweFor" placeholder="For (round)" aria-label="For which round">
+              <button class="btn sm" type="submit">Add</button>
+            </form>
+            <datalist id="rosterList"></datalist>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="cols">
+      <section class="sec">
+        <div class="sec-h"><h2>Clubhouse</h2><span class="meta">Jokes, memes and trash talk</span></div>
+        <div class="sec-b">
+          <div class="joke" id="joke"></div>
+          <form class="addform" id="postForm">
+            <input id="postText" placeholder="Say something" aria-label="Post text" style="grid-column:span 2" required>
+            <input id="postLink" placeholder="Meme or Instagram link (optional)" aria-label="Link" type="url" style="grid-column:span 2">
+            <button class="btn sm" type="submit">Post</button>
+          </form>
+          <div class="posts" id="posts"></div>
+        </div>
+      </section>
+
+      <div class="stack">
+        <section class="sec">
+          <div class="sec-h"><h2>Golf trip</h2><span class="meta">Mark trip days on the calendar</span></div>
+          <div class="sec-b" id="trip"></div>
+        </section>
+        <section class="sec">
+          <div class="sec-h"><h2>19th hole</h2><span class="meta">Where we meet up</span></div>
+          <div class="sec-b" id="meetup"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = /*DATA*/{"groups": {"g1": ["Nate", "Kelly", "Jeff L.", "Jeff R."], "g2": ["Bart", "Al", "Scott R.", "Teal"], "maybe": ["Sandy", "Ryan B.", "Roy"]}, "courses": [{"id": "winstar", "name": "WinStar Golf Club", "city": "Thackerville, OK", "area": "Road trip", "address": "10813 Pro Shop Rd, Thackerville, OK 73459", "phone": "(580) 276-4229", "holes": 36, "rate": "About $75–100 with cart (call for today's rate)", "note": "The \"Windstar\" pick. About an hour up I-35 at the casino. Redbud reopened May 2026 after a redo.", "book": "https://www.winstar.com/escape/destinations/winstar-golf-club/", "web": "https://www.winstar.com/escape/destinations/winstar-golf-club/"}, {"id": "tribute", "name": "The Tribute", "city": "The Colony", "area": "Colony / Frisco", "address": "1000 Lebanon Rd, The Colony, TX 75056", "phone": "(972) 370-5465", "holes": 18, "rate": "$175 with cart Fri–Sun · $150 Mon–Thu", "note": "Scottish-links tribute on Lewisville Lake. Closest big one to Nate.", "book": "https://www.golfrev.com/go/tee_times/?htc=283&courseid=3936&r=1", "web": "https://www.tributegolf.com"}, {"id": "old-american", "name": "Old American", "city": "The Colony", "area": "Colony / Frisco", "address": "1000 Lebanon Rd, The Colony, TX 75056", "phone": "(972) 370-5465", "holes": 18, "rate": "$200 with cart (non-member)", "note": "Justin Leonard design next to the Tribute. Weekends before 2pm are members only.", "book": "https://www.golfrev.com/go/tee_times/?htc=283&courseid=3936&r=1", "web": "https://www.tributegolf.com"}, {"id": "frisco-farms", "name": "The Club at Frisco Farms", "city": "Frisco", "area": "Colony / Frisco", "address": "4701 Plantation Ln, Frisco, TX", "phone": "(972) 335-4653", "holes": 18, "rate": null, "note": "The old Plantation course, renamed.", "book": "https://www.golfnow.com/tee-times/facility/7309-the-club-at-frisco-farms/search", "web": null}, {"id": "heritage-ranch", "name": "Heritage Ranch", "city": "Fairview", "area": "Plano / Allen / McKinney", "address": "465 Scenic Ranch Cir, Fairview, TX 75069", "phone": "(972) 886-4700", "holes": 18, "rate": null, "note": "Highest-rated around here (4.7). Arthur Hills design, open to the public.", "book": "https://www.golfnow.com/tee-times/facility/12113-heritage-ranch-golf-country-club/search", "web": "http://www.heritageranchgolf.com"}, {"id": "westridge", "name": "WestRidge", "city": "McKinney", "area": "Plano / Allen / McKinney", "address": "9055 N Cotton Ridge Rd, McKinney, TX", "phone": "(972) 346-2212", "holes": 18, "rate": "About $119 on GolfNow this weekend", "note": "Rated 4.3. McKinney's best public track.", "book": "https://www.golfnow.com/tee-times/facility/7308-westridge-golf-course/search", "web": null}, {"id": "twin-creeks", "name": "Twin Creeks", "city": "Allen", "area": "Plano / Allen / McKinney", "address": "501 Twin Creeks Dr, Allen, TX 75013", "phone": "(972) 390-8888", "holes": 18, "rate": "$121 morning · $65 after 2pm (GolfNow, this weekend)", "note": "Arnold Palmer design.", "book": "https://www.golfnow.com/tee-times/facility/1416-the-golf-club-at-twin-creeks/search", "web": "https://www.twincreeksgolf.com"}, {"id": "pecan-hollow", "name": "Pecan Hollow", "city": "Plano", "area": "Plano / Allen / McKinney", "address": "4901 14th St, Plano, TX 75074", "phone": "(972) 941-7600", "holes": 18, "rate": "$69 + tax weekend before noon", "note": "Plano city course, rated 4.5. Big par 4s over water on 16–18.", "book": "https://www.pecanhollowgc.com/book-a-tee-time/", "web": "https://www.pecanhollowgc.com"}, {"id": "watters-creek", "name": "Watters Creek", "city": "Plano", "area": "Plano / Allen / McKinney", "address": "7201 Chase Oaks Blvd, Plano, TX 75025", "phone": "(214) 509-4653", "holes": 18, "rate": "$80 with cart Fri–Sun", "note": "18-hole Traditions course plus a 9-hole short course.", "book": "https://foreupsoftware.com/index.php/booking/22168/10027#teetimes", "web": "https://www.watterscreekgolf.com"}, {"id": "ridgeview-ranch", "name": "Ridgeview Ranch", "city": "Plano", "area": "Plano / Allen / McKinney", "address": "2701 Ridgeview Dr, Plano, TX 75025", "phone": "(972) 390-1039", "holes": 18, "rate": "About $77 on GolfNow this weekend", "note": "Wide, forgiving fairways and two creeks.", "book": "https://www.golfnow.com/tee-times/facility/4654-ridgeview-ranch-golf-club/search", "web": "https://www.ridgeviewgc.com"}, {"id": "firewheel-bridges", "name": "Firewheel Bridges", "city": "Garland", "area": "Dallas side", "address": "1535 E Brand Rd, Garland, TX 75044", "phone": "(972) 205-2795", "holes": 27, "rate": "$69 with cart weekend · $45 after 3pm", "note": "Firewheel's top course: three nines.", "book": "https://www.golfnow.com/tee-times/facility/9413-the-bridges-course-firewheel-golf-park/search", "web": "https://www.golffirewheel.com"}, {"id": "firewheel-lakes", "name": "Firewheel Lakes", "city": "Garland", "area": "Dallas side", "address": "600 W Campbell Rd, Garland, TX 75044", "phone": "(972) 205-2795", "holes": 18, "rate": "$58 with cart weekend (non-resident)", "note": "Links-style with water everywhere. Saturday's 8:25 round.", "book": "https://www.golfnow.com/tee-times/facility/9415-the-lakes-course-firewheel-golf-park/search", "web": "https://www.golffirewheel.com"}, {"id": "stevens-park", "name": "Stevens Park", "city": "Dallas", "area": "Dallas side", "address": "1005 N Montclair Ave, Dallas, TX 75208", "phone": "(214) 670-7506", "holes": 18, "rate": "$69 with cart Fri–Sun before noon · $48 walking", "note": "Crew favorite. The \"Little Augusta\" of North Texas, tiny greens and skyline views.", "book": "https://www.stevensparkgolf.com/bookteetimes", "web": "https://www.stevensparkgolf.com"}, {"id": "indian-creek", "name": "Indian Creek", "city": "Carrollton", "area": "Dallas side", "address": "1650 W Frankford Rd, Carrollton, TX 75007", "phone": "(972) 466-9850", "holes": 36, "rate": "$80 Creek · $65 Lakes with cart before 2pm", "note": "Two 18s. Weekend times must be prepaid.", "book": "https://www.indiancreekgolfclub.com/TeeTimes", "web": "https://www.indiancreekgolfclub.com"}, {"id": "coyote-ridge", "name": "Coyote Ridge", "city": "Carrollton", "area": "Dallas side", "address": "1640 W Hebron Pkwy, Carrollton, TX", "phone": "(972) 395-0786", "holes": 18, "rate": "About $94–115 on GolfNow this weekend", "note": "Five miles from Nate. Rated 4.2.", "book": "https://www.golfnow.com/tee-times/facility/1261-coyote-ridge-golf-club/search", "web": null}, {"id": "bridlewood", "name": "Bridlewood", "city": "Flower Mound", "area": "West side", "address": "4000 Windsor Dr, Flower Mound, TX", "phone": "(972) 355-4800", "holes": 18, "rate": "$149 weekend before 11am (lunch + a beer) · $65 after 3pm", "note": "Reviews this year mention temporary greens.", "book": "https://www.bridlewoodgolf.com/golf/tee-times", "web": "https://www.bridlewoodgolf.com"}, {"id": "tour-18", "name": "Tour 18", "city": "Flower Mound", "area": "West side", "address": "8718 Amen Corner, Flower Mound, TX 75022", "phone": "(817) 430-2000", "holes": 18, "rate": "$119–149 on GolfNow this weekend", "note": "Copies of famous holes, finishing with Amen Corner.", "book": "https://www.golfnow.com/tee-times/facility/1391-tour-18-dallas-golf-course/search", "web": "http://www.tour18-dallas.com"}, {"id": "cowboys", "name": "Cowboys Golf Club", "city": "Grapevine", "area": "West side", "address": "1600 Fairway Dr, Grapevine, TX 76051", "phone": "(817) 481-7277", "holes": 18, "rate": "About $303 on GolfNow (food and drinks included)", "note": "The splurge round.", "book": "https://cowboysvippp.ezlinksgolf.com/", "web": "https://www.cowboysgolfclub.com"}, {"id": "grapevine", "name": "Grapevine Golf Course", "city": "Grapevine", "area": "West side", "address": "3800 Fairway Dr, Grapevine, TX 76051", "phone": "(817) 410-3377", "holes": 27, "rate": "$81 with cart Fri–Sun", "note": "27-hole city course.", "book": "https://foreupsoftware.com/index.php/booking/19536#/teetimes", "web": "https://grapevinegc.com"}], "trip": {"name": "Black Jack's Crossing", "location": "Lajitas Golf Resort, Lajitas, TX · Big Bend", "phone": "(432) 424-5080", "rate_note": "About $195 prime Saturday with cart (2023 rate, call for current)", "note": "Ranked the #1 course you can play in Texas. Lanny Wadkins design on the Rio Grande. Groups of 8+ can book a stay-and-play.", "book": "https://www.lajitasgolfresort.com/golf/", "web": "https://www.lajitasgolfresort.com/golf/"}, "meetup": [{"name": "Tight Ends", "type": "Bar", "address": "5584 TX-121, Plano, TX 75024", "city": "Plano", "phone": "(469) 850-6796", "note": "On 121 in west Plano, minutes from The Colony.", "web": "https://tightends.com/"}, {"name": "Wild Pitch", "type": "Bar", "address": "2390 Parkwood Blvd, Frisco, TX 75034", "city": "Frisco", "phone": "(214) 618-4450", "note": "By Stonebriar and the ballpark. Pool tables.", "web": "https://wildpitchsportsbar.com/menu-frisco"}, {"name": "X-Golf Frisco", "type": "Golf sim", "address": "5977 Preston Rd, Suite 500, Frisco, TX 75034", "city": "Frisco", "phone": "(214) 308-9011", "note": "Simulator bays, $35–70 an hour, full bar. For rainy days and winter.", "web": "https://playxgolf.com/locations/frisco/"}], "weather": {"place": "The Colony", "as_of": "Fri 6:23pm", "days": [{"day": "Sat 10/24", "hi": 85, "lo": 57, "rain": 2, "wind": "SE 9 mph", "windMax": 9, "sky": "Partly cloudy"}, {"day": "Sun 10/25", "hi": 82, "lo": 60, "rain": 2, "wind": "SE 9 mph", "windMax": 9, "sky": "Partly cloudy"}, {"day": "Mon 10/26", "hi": 80, "lo": 56, "rain": 1, "wind": "SE 7 mph", "windMax": 7, "sky": "Partly cloudy"}, {"day": "Tue 10/27", "hi": 80, "lo": 60, "rain": 4, "wind": "SSE 8 mph", "windMax": 8, "sky": "Partly cloudy"}, {"day": "Wed 10/28", "hi": 83, "lo": 61, "rain": 2, "wind": "SSE 9 mph", "windMax": 9, "sky": "Mostly sunny"}, {"day": "Thu 10/29", "hi": 83, "lo": 63, "rain": 15, "wind": "SSE 8 mph", "windMax": 8, "sky": "Partly cloudy"}, {"day": "Fri 10/30", "hi": 78, "lo": 64, "rain": 49, "wind": "SSE 10 mph", "windMax": 10, "sky": "Showers possible"}]}, "tee": {"as_of": "2026-10-23T18:34:00-05:00", "facs": [{"id": 41, "n": "Stewart Peninsula", "c": "The Colony", "d": 2, "r": 4.0, "seo": "41-stewart-peninsula-golf-course", "ph": "(972) 625-8700"}, {"id": 33, "n": "The Trails of Frisco", "c": "Frisco", "d": 5, "r": 3.8, "seo": "33-the-trails-of-frisco-golf-club", "ph": "(972) 668-4653"}, {"id": 4631, "n": "Frisco Lakes", "c": "Frisco", "d": 5, "r": 3.9, "seo": "4631-frisco-lakes-golf-club", "ph": "(972) 292-3089"}, {"id": 1261, "n": "Coyote Ridge", "c": "Carrollton", "d": 5, "r": 4.2, "seo": "1261-coyote-ridge-golf-club", "ph": "(972) 395-0786"}, {"id": 7305, "n": "Lake Park 18", "c": "Lewisville", "d": 7, "r": 3.9, "seo": "7305-lake-park-18-golf-club", "ph": "(972) 219-5661"}, {"id": 4654, "n": "Ridgeview Ranch", "c": "Plano", "d": 8, "r": 3.3, "seo": "4654-ridgeview-ranch-golf-club", "ph": "(972) 390-1039"}, {"id": 7309, "n": "The Club at Frisco Farms", "c": "Frisco", "d": 9, "r": 3.4, "seo": "7309-the-club-at-frisco-farms", "ph": "(972) 335-4653"}, {"id": 1416, "n": "Twin Creeks", "c": "Allen", "d": 10, "r": 4.0, "seo": "1416-the-golf-club-at-twin-creeks", "ph": "(972) 390-8888"}, {"id": 7493, "n": "Bridlewood", "c": "Flower Mound", "d": 11, "r": 3.7, "seo": "7493-bridlewood-golf-club", "ph": "(972) 355-4800"}, {"id": 7308, "n": "WestRidge", "c": "McKinney", "d": 12, "r": 4.3, "seo": "7308-westridge-golf-course", "ph": "(972) 346-2212"}, {"id": 1307, "n": "Pecan Hollow", "c": "Plano", "d": 15, "r": 4.5, "seo": "1307-pecan-hollow-golf-course", "ph": "(972) 941-7600"}, {"id": 1391, "n": "Tour 18", "c": "Flower Mound", "d": 16, "r": 3.8, "seo": "1391-tour-18-dallas-golf-course", "ph": "(817) 430-2000"}, {"id": 7307, "n": "Cowboys Golf Club", "c": "Grapevine", "d": 16, "r": 3.7, "seo": "7307-cowboys-golf-club", "ph": "(817) 481-7277"}, {"id": 10769, "n": "Duck Creek", "c": "Garland", "d": 16, "r": 3.0, "seo": "10769-duck-creek-golf-club", "ph": "(214) 440-2229"}, {"id": 9413, "n": "Firewheel Bridges", "c": "Garland", "d": 17, "r": 4.3, "seo": "9413-the-bridges-course-firewheel-golf-park", "ph": "(972) 205-2795"}, {"id": 9415, "n": "Firewheel Lakes", "c": "Garland", "d": 17, "r": 4.2, "seo": "9415-the-lakes-course-firewheel-golf-park", "ph": "(972) 205-2795"}, {"id": 9414, "n": "Firewheel Old Course", "c": "Garland", "d": 17, "r": 4.0, "seo": "9414-the-old-course-firewheel-golf-park", "ph": "(972) 205-2795"}, {"id": 12113, "n": "Heritage Ranch", "c": "Fairview", "d": 17, "r": 4.7, "seo": "12113-heritage-ranch-golf-country-club", "ph": "(972) 886-4700"}, {"id": 1491, "n": "Bear Creek East", "c": "Dallas (DFW Airport)", "d": 18, "r": 4.1, "seo": "1491-bear-creek-golf-club-east-course", "ph": "(972) 456-3200"}, {"id": 6374, "n": "Bear Creek West", "c": "Dallas (DFW Airport)", "d": 18, "r": 4.1, "seo": "6374-bear-creek-golf-club-west-course", "ph": "(972) 456-3200"}, {"id": 42, "n": "Oak Hollow", "c": "McKinney", "d": 19, "r": 3.9, "seo": "42-oak-hollow-golf-course", "ph": "(972) 562-0670"}, {"id": 38, "n": "Woodbridge", "c": "Wylie", "d": 20, "r": 3.8, "seo": "38-woodbridge-golf-club", "ph": "(972) 429-5100"}, {"id": 32, "n": "Waterview", "c": "Rowlett", "d": 22, "r": 3.7, "seo": "32-waterview-golf-club", "ph": "(972) 463-8900"}, {"id": 31, "n": "Riverside", "c": "Grand Prairie", "d": 22, "r": 3.7, "seo": "31-riverside-golf-club-dallas", "ph": "(817) 640-7800"}, {"id": 14613, "n": "Sky Creek Ranch", "c": "Keller", "d": 22, "r": 4.1, "seo": "14613-sky-creek-ranch-golf-club", "ph": null}, {"id": 3184, "n": "Mesquite Golf Club", "c": "Mesquite", "d": 23, "r": 4.3, "seo": "3184-mesquite-golf-club", "ph": "(972) 270-7457"}, {"id": 1280, "n": "Champions Circle", "c": "Fort Worth", "d": 24, "r": 4.3, "seo": "1280-golf-club-at-champions-circle", "ph": "(817) 497-2582"}, {"id": 1319, "n": "Texas Rangers Golf Club", "c": "Arlington", "d": 25, "r": 4.2, "seo": "1319-texas-rangers-golf-club", "ph": "(817) 275-5941"}, {"id": 4512, "n": "The Bridges Golf Club", "c": "Gunter", "d": 26, "r": 4.2, "seo": "4512-the-bridges-golf-club-tx", "ph": "(903) 696-0022"}, {"id": 48, "n": "Waterchase", "c": "Fort Worth", "d": 27, "r": 4.5, "seo": "48-waterchase-golf-club", "ph": "(817) 861-4653"}, {"id": 7304, "n": "Iron Horse", "c": "North Richland Hills", "d": 27, "r": 3.2, "seo": "7304-iron-horse-golf-course", "ph": "(817) 485-6666"}, {"id": 1311, "n": "Prairie Lakes", "c": "Grand Prairie", "d": 27, "r": 4.1, "seo": "1311-prairie-lakes-golf-course", "ph": "(972) 263-0661"}, {"id": 7312, "n": "Fossil Creek", "c": "Fort Worth", "d": 28, "r": 3.9, "seo": "7312-the-golf-club-at-fossil-creek", "ph": "(817) 847-1900"}, {"id": 1945, "n": "Grand Oaks", "c": "Grand Prairie", "d": 28, "r": 3.6, "seo": "1945-grand-oaks-golf-club", "ph": "(972) 264-2974"}, {"id": 29, "n": "Buffalo Creek", "c": "Heath", "d": 29, "r": 4.4, "seo": "29-buffalo-creek-golf-club", "ph": "(972) 771-4003"}, {"id": 4992, "n": "Lake Arlington", "c": "Arlington", "d": 30, "r": 4.1, "seo": "4992-lake-arlington-golf-course-tx", "ph": "(817) 451-6101"}], "days": {"2026-10-24": {"29": "1200,114,1 1220,114,12 1320,109,12 1330,109,1234 1420,95,12 1430,95,12 1440,95,1234 1450,95,1234 1510,69,1 1520,69,12 1530,69,1234 1540,69,1234 1550,69,1234 1600,69,1 1610,69,1234 1620,69,1234 1630,49,1234 1640,49,1234 1650,49,1234 1700,49,1234 1710,49,1234 1720,49,1234 1730,49,1234 1740,49,1234 1750,49,1234 1800,49,1234 1810,49,1234 1820,49,1234 1830,49,1234 1840,49,1234", "31": "0837,81,1 1007,81,1 1100,81,1 1115,81,1 1237,81,1 1245,81,1 1307,77,1 1322,77,1 1330,77,12 1337,77,12 1345,77,234 1352,77,234 1407,69,12 1415,69,234 1422,69,234 1437,69,234 1445,69,234 1500,56,12 1507,54,234 1515,54,234 1522,54,234 1537,54,234 1545,54,234 1552,54,234 1607,54,234 1615,54,234 1622,54,234 1630,54,234 1637,54,234 1645,54,234", "32": "0711,39.5,1234,9 0721,39.5,1,9 0930,79,1 0948,79,1 1024,79,1 1136,79,1 1154,79,12 1230,79,12 1239,79,12 1315,79,1234 1324,79,1234 1409,59,1 1418,59,12 1427,59,1234 1436,59,1234 1445,59,1234 1454,43.99,1 1503,59,1234 1512,59,1234 1521,59,1234 1530,59,1234 1539,59,1234 1548,59,1234 1557,59,1234 1606,49,1234 1615,49,1234 1624,49,1234 1633,49,1234 1642,49,1234 1651,49,1234 1700,49,1234 1709,49,1234 1718,49,1234 1727,49,1234 1736,49,1234 1745,49,1234 1754,49,1234 1803,49,1234 1812,49,1234", "33": "1300,79,12 1309,79,12 1318,79,234 1327,79,234 1336,79,234 1345,79,234 1354,79,234 1403,79,12 1412,79,12 1421,79,234 1430,79,234 1439,79,234 1448,79,234 1457,79,234 1506,79,234 1515,79,234 1524,79,234 1542,79,234 1551,79,12 1645,49,12 1654,49,234 1703,49,234 1712,49,234 1721,49,234 1730,49,234 1739,49,234 1748,49,234 1757,49,234 1806,49,234", "38": "1504,79,234 1512,79,234 1728,79,234 1736,79,234 1744,79,234", "41": "1224,52,123 1524,52,1234 1548,52,1234", "42": "1520,58,12 1540,58,12 1550,58,1234 1630,50,1234 1640,50,1234 1650,50,1234 1720,50,1234 1730,50,1234 1740,50,1234 1750,50,1234 1800,42,1234 1810,42,1234 1820,42,1234 1830,42,1234", "48": "0920,83,1 1020,83,1 1040,83,1 1050,83,12 1240,83,1 1310,83,1 1330,83,12 1400,83,234 1410,60,12 1500,60,12 1520,60,1 1540,60,1 1550,60,234 1620,45,1 1630,45,234 1640,45,234 1650,45,234 1700,45,234 1710,45,234 1720,45,234 1730,45,234 1740,45,234 1750,45,234 1800,45,234 1810,45,234", "1261": "1320,115,234 1340,115,234 1350,115,234 1400,115,234 1410,115,12 1420,115,234 1430,115,234 1500,94,234 1520,94,23 1700,94,234 1710,94,234 1720,94,234 1730,94,234 1800,94,234", "1280": "1448,84,1 1524,63,1 1548,63,1 1600,63,12 1624,63,12 1636,63,12 1648,63,234 1700,63,12", "1307": "1623,41.13,24 1630,41.13,24 1637,41.13,24 1644,41.13,24 1651,41.13,24 1658,41.13,24", "1311": "0845,43.86,12 1552,43.86,12 1600,43.86,1 1607,43.86,123 1615,43.86,1234 1622,43.86,1234 1630,43.86,12 1637,43.86,1234 1645,43.86,1234 1652,43.86,1234 1707,25,1234 1715,25,1234 1722,25,1234 1730,25,1234 1737,25,1234 1745,25,1234", "1319": "1310,150,12 1400,147,12 1450,147,234 1500,137,234 1520,137,234 1540,137,234 1550,137,234 1610,97,234 1620,97,234 1630,97,234 1640,97,234 1650,97,234 1700,96,234", "1391": "1050,149,2 1120,149,2 1130,149,2 1140,149,234 1150,149,234 1200,119,2 1210,119,234 1220,119,234 1230,119,234 1240,119,234 1250,119,234 1320,119,2 1340,119,234 1350,119,23 1400,119,2 1410,119,2 1420,119,234 1430,119,234 1440,119,234 1450,119,234 1500,119,234 1510,119,234 1520,119,234 1530,119,234 1540,119,234 1550,119,234 1600,119,234 1610,119,234 1620,119,234 1630,119,234 1640,119,234 1650,119,234 1700,119,234 1710,119,234 1720,119,234 1730,119,234 1740,119,234 1750,119,234 1800,119,234", "1416": "1030,120.95,1 1106,120.95,234 1133,120.95,1 1151,120.95,12 1218,120.95,1 1227,120.95,234 1236,120.95,234 1245,120.95,234 1254,120.95,234 1312,120.95,12 1330,120.95,1 1339,120.95,234 1348,120.95,234 1357,120.95,234 1406,64.95,1 1415,64.95,1 1424,64.95,12 1451,64.95,1 1500,64.95,1 1509,64.95,12 1527,64.95,1 1536,64.95,12 1545,64.95,12 1554,64.95,234 1603,64.95,234 1612,64.95,234 1621,64.95,234 1630,64.95,234 1639,64.95,234 1648,64.95,234 1657,64.95,234 1706,64.95,234 1715,64.95,234 1724,64.95,234 1733,64.95,234 1742,64.95,234 1751,64.95,234", "1491": "1225,94.95,1 1244,94.95,1 1341,94.95,12 1428,94.95,1 1447,72.99,1 1525,60.95,1 1544,60.95,1234 1554,60.95,1234 1603,60.95,1234 1613,60.95,1234 1622,60.95,1234 1632,60.95,1234 1641,60.95,1234 1651,60.95,1234 1700,60.95,1234 1710,60.95,1234 1719,60.95,1234 1729,60.95,1234 1738,60.95,1234", "1945": "0810,56,2 1100,50,1 1130,36.99,12 1150,50,1 1240,50,1 1250,50,1 1430,37,1234 1440,37,1234 1450,37,1234 1500,36,1234 1510,36,1234 1520,36,1234 1530,36,1234 1540,36,1234 1550,36,1234 1600,36,1234 1610,36,1234 1620,36,1234 1630,36,1234 1640,36,1234 1650,36,1234 1700,27,1234 1710,27,1234", "3184": "1410,40.64,1 1500,24.94,1,9 1510,24.94,1234,9 1520,24.94,1,9 1530,24.94,1234,9 1540,24.94,1234,9 1550,24.94,1234,9 1600,24.94,12,9 1610,24.94,123,9 1620,24.94,1234,9 1630,24.94,1234,9 1640,24.94,1234,9", "4512": "1410,92,123 1450,88,12 1500,85,1234 1510,82,1234 1520,80,1234 1530,77,1234 1540,77,1234 1550,77,1234 1600,77,1234 1610,77,1234 1620,77,1234 1630,77,1234 1640,76,1234 1650,75,1234 1700,74,1234 1710,73,1234 1720,72,1234 1730,71,1234 1740,71,1234 1750,71,1234 1800,71,1234 1810,71,1234", "4631": "1054,125,1 1148,99,1 1605,70,2 1645,70,1 1715,45,2 1725,45,234 1735,45,234 1745,45,234 1755,45,234", "4654": "1331,76.95,234 1339,76.95,234 1348,76.95,234 1356,76.95,234", "6374": "1501,60.95,1 1520,60.95,12 1530,60.95,1234 1539,60.95,1234 1549,60.95,1234 1558,60.95,1234 1608,60.95,1234 1617,60.95,1234 1627,60.95,1234 1636,60.95,1234 1646,60.95,1234 1655,60.95,1234 1705,60.95,1234 1714,60.95,1234 1724,60.95,1234 1733,60.95,1234", "7304": "0800,85,12 1040,84,1 1050,84,1 1120,85,1 1150,85,1 1200,83,1 1220,83,1 1230,83,1 1240,83,12 1250,83,1234 1300,82,12 1310,82,1234 1320,82,12 1330,82,12 1420,58,12 1440,58,1234 1450,58,1234 1500,52,1 1520,52,1234 1530,52,12 1540,52,1234 1550,52,1234 1600,51,1234 1610,51,1234 1620,51,1234 1630,51,1234 1640,51,1234 1650,51,1234 1700,41,1234", "7305": "1239,65,1 1247,65,1 1404,65,1 1412,65,1 1429,65,1 1438,65,1 1446,65,1234 1503,65,1234 1512,65,1234 1520,65,1234 1529,65,1234 1537,37,1 1546,37,1 1554,37,1234 1603,37,1234 1611,37,1234 1620,37,1234 1628,37,1234 1637,37,1234 1645,37,1234 1654,37,1234 1702,37,1234 1711,37,1234 1719,37,1234 1728,37,1234 1736,37,1234 1745,37,1234 1753,37,1234 1802,37,1234 1810,37,1234 1819,37,1234 1827,37,1234 1836,37,1234", "7307": "0840,302.99,1 1050,302.99,1 1210,302.99,1 1340,302.99,12 1540,302.99,234 1550,302.99,234 1620,302.99,234 1630,302.99,12 1640,302.99,234 1650,302.99,234 1700,302.99,234 1710,302.99,234 1720,302.99,234 1730,302.99,234 1740,302.99,234 1750,302.99,234 1800,302.99,234 1810,302.99,234 1820,302.99,234 1830,302.99,234 1840,302.99,234", "7308": "1156,119,2 1252,119,234 1444,119,2 1524,119,2 1548,119,234 1636,119,234 1644,119,234 1652,119,2 1700,119,234 1708,119,234 1716,119,234", "7309": "0736,89,1 0933,89,1 1054,89,1 1215,87,1 1251,87,234 1300,88,1 1309,88,123 1318,88,234 1327,88,234 1345,88,12 1354,88,234 1403,76,12 1412,76,234 1421,76,234 1430,76,234 1448,76,234 1457,76,234 1506,47,123 1515,47,1 1524,47,234 1533,47,234 1542,47,234 1551,47,234 1600,47,234 1609,47,234 1618,47,234 1627,47,234 1636,47,234 1645,47,234 1654,47,234 1703,32,234 1712,32,234 1721,32,234 1730,32,234 1739,32,234 1748,32,234 1757,32,234 1806,33,234 1815,33,234 1824,33,234", "7312": "1249,119.95,12 1346,119.95,12 1405,119.95,12 1424,119.95,234 1434,119.95,234 1443,119.95,234 1453,119.95,234 1521,64.95,234 1531,64.95,234 1540,64.95,234 1550,64.95,234 1559,64.95,234 1609,64.95,234 1618,64.95,234 1628,64.95,234 1637,64.95,234 1647,64.95,234 1656,64.95,234 1706,64.95,234 1715,64.95,234 1725,64.95,234 1734,64.95,234 1744,64.95,234", "7493": "0956,149,1 1012,149,1 1020,149,1 1108,149,234 1116,139,1 1124,139,1 1244,109,1 1252,109,234 1452,89,1 1524,65,234 1540,65,234 1556,65,1 1604,65,234 1612,65,12 1620,65,1 1636,65,234 1644,65,234 1652,65,234 1700,65,234 1708,65,234 1716,65,234 1748,65,234 1756,65,234 1804,65,234", "9413": "1420,65,12 1430,65,1234 1450,65,12 1510,47,12 1520,47,12 1530,47,1234 1540,47,1234 1550,47,1234 1600,47,1234 1610,47,1234 1620,47,1234 1630,47,1234 1640,47,1234", "9414": "1600,33,12 1610,33,1234 1620,33,1234 1630,33,1234 1640,33,1234", "9415": "1445,53,12 1505,33,1 1545,33,12 1555,33,12 1605,33,1234 1615,33,1234 1625,33,1234 1635,33,12", "10769": "1108,50.81,12 1140,50.81,1234 1148,50.81,1234 1156,50.81,1234 1204,50.81,123 1212,50.81,1234 1220,50.81,1234 1228,50.81,1234 1236,50.81,1234 1244,50.81,1234 1252,50.81,1234 1300,44.34,12 1316,44.34,1234 1324,44.34,1234 1332,44.34,1234 1340,44.34,1234 1348,44.34,1234 1356,44.34,1234 1412,44.34,1234 1428,44.34,12 1436,44.34,1234 1444,44.34,1234 1508,35.1,1234 1516,35.1,1234 1524,35.1,1234 1532,35.1,1234 1540,35.1,1234 1548,35.1,1234 1556,35.1,1234 1604,35.1,1234 1612,35.1,1234 1620,35.1,1234 1628,35.1,1234 1636,35.1,1234 1644,35.1,1234 1652,35.1,1234 1700,25.87,1234 1708,25.87,1234 1716,25.87,1234 1724,25.87,1234 1732,25.87,1234 1740,25.87,1234 1748,25.87,1234 1756,25.87,1234 1804,25.87,1234 1812,25.87,1234 1820,25.87,1234 1828,25.87,1234", "12113": "0927,149,12 1003,149,1 1021,149,1 1254,149,12 1313,149,1 1423,149,12 1503,103,1 1533,103,1234 1543,103,1234 1553,103,1234 1603,90,1234 1613,90,1234 1623,90,1234 1633,90,1234 1643,90,1234 1653,90,1234 1703,90,1234 1713,90,1234", "14613": "1034,144,234 1122,109,2 1514,89,234 1522,89,2 1538,89,2 1554,89,2 1626,59,234 1650,59,234 1658,59,234 1722,59,234 1746,59,234 1818,59,234"}, "2026-10-25": {"29": "0810,114,123 1410,109,1 1420,109,12 1450,109,1234 1500,69,1234 1510,69,1234 1520,69,1234 1530,69,1234 1540,69,1234 1550,69,1234 1600,69,1234 1610,69,1234 1620,69,1234 1630,49,1234 1640,49,1234 1650,49,1234 1700,49,1234 1710,49,1234 1720,49,1234 1730,49,1234 1740,49,1234 1750,49,1234 1800,49,1234 1810,49,1234 1820,49,1234 1830,49,1234 1840,49,1234", "31": "0745,73,1 0830,81,1 0845,81,1 1007,81,1 1030,81,1 1052,81,1 1115,77,12 1145,77,234 1230,71,12 1237,71,234 1245,71,234 1252,71,234 1315,71,234 1322,71,234 1337,71,234 1345,71,234 1352,71,234 1407,69,234 1415,69,234 1422,69,234 1437,69,234 1445,69,234 1500,56,234 1507,54,234 1515,54,234 1522,54,234 1537,54,234 1545,54,234 1552,54,234 1607,54,234 1615,54,234 1622,54,234 1630,54,234 1637,54,234 1645,54,234", "32": "0711,39.5,1234,9 0721,39.5,1234,9 0733,79,1 0751,79,1 0818,79,1 0845,79,12 0903,79,1 0912,79,1 0921,79,1234 0939,79,1234 0948,79,1234 0957,79,1234 1006,79,12 1033,79,1234 1042,79,1234 1051,79,1234 1100,79,1234 1109,79,1234 1118,79,1234 1127,79,12 1136,79,1234 1145,79,1234 1154,79,1234 1203,79,1234 1212,79,1234 1221,79,1234 1230,79,1234 1239,79,1234 1248,60.99,1 1257,79,1234 1306,79,1234 1315,79,1234 1324,79,1234 1333,79,1234 1342,79,1234 1351,45.99,1 1409,59,1234 1418,59,1234 1427,59,1234 1436,59,1234 1445,59,1234 1454,47.99,1234 1503,59,1234 1512,59,1234 1521,59,1234 1530,59,1234 1539,59,1234 1548,59,1234 1557,59,1234 1606,49,1234 1615,49,1234 1624,49,1234 1633,49,1234 1642,49,1234 1651,49,1234 1700,49,1234 1709,49,1234 1718,49,1234 1727,49,1234 1736,49,1234 1745,49,1234 1754,49,1234 1803,49,1234", "33": "1027,99,12 1045,99,234 1130,99,234 1139,99,234 1148,99,234 1157,99,234 1242,79,234 1251,79,234 1300,79,234 1309,79,234 1354,79,234 1421,79,12 1430,79,234 1439,79,234 1448,79,234 1457,79,234 1506,79,234 1515,79,234 1524,79,234 1533,79,234 1542,79,234 1551,79,234 1645,49,234 1654,49,234 1703,49,234 1712,49,234 1721,49,234 1730,49,234 1739,49,234 1748,49,234 1757,49,234 1806,49,234", "38": "0832,79,1 1112,79,1 1136,79,12 1200,79,12 1312,79,12 1408,79,12 1504,79,12 1528,79,234 1536,79,234 1608,79,234 1616,79,234 1640,79,234 1648,79,234 1720,79,234", "41": "0812,51.99,1 1248,51.99,12 1324,51.99,1234 1448,51.99,1234 1512,51.99,1234 1524,51.99,1234 1536,51.99,1234 1548,51.99,1234", "42": "0750,71,1234 1330,75,1 1400,75,12 1410,75,12 1430,75,12 1440,75,1234 1450,75,1234 1510,56,123 1520,56,12 1530,56,1234 1540,56,1234 1550,56,1234 1600,49,1234 1610,49,1234 1620,49,1234 1640,49,1234 1650,49,1234 1700,48,1234 1710,48,1234 1720,48,1234 1730,48,1234 1740,48,1234 1750,48,1234 1800,42,1234 1810,42,1234 1820,42,1234 1830,42,1234", "48": "1420,60,1 1440,60,12 1450,60,1 1510,60,12 1540,60,234 1550,60,234 1600,60,234 1610,45,234 1620,45,234 1630,45,234 1640,45,234 1650,45,234 1700,45,234 1710,45,234 1720,45,234 1730,45,234 1740,45,234 1750,45,234 1800,45,234 1810,45,234", "1261": "1150,115,1 1240,115,1 1310,115,1 1320,115,12 1330,115,12 1340,115,234 1410,115,234 1420,115,234 1430,115,234 1440,115,234 1500,94,1 1510,94,234 1520,94,234 1530,94,23 1610,94,234 1620,94,234 1630,94,234 1640,94,234 1700,94,234 1710,94,234 1720,94,234 1730,94,234 1800,94,234", "1280": "1100,84,1 1112,84,1 1124,84,1 1348,84,1 1424,84,12 1448,84,234 1500,63,12 1512,63,234 1524,63,234 1536,63,234 1548,63,234 1600,63,234 1612,63,234 1624,63,234 1636,63,234 1648,63,234 1700,63,234", "1307": "1403,54.13,2 1602,41.13,2 1623,41.13,24 1630,41.13,24 1637,41.13,24 1644,41.13,24 1651,41.13,24 1658,41.13,24", "1311": "0945,43.86,1 1307,43.86,1 1345,43.86,1 1400,43.86,12 1437,43.86,1234 1452,43.86,1234 1500,43.86,1234 1507,43.86,1234 1515,43.86,1234 1522,43.86,1234 1530,43.86,1234 1537,43.86,1234 1545,43.86,1234 1552,43.86,1234 1607,43.86,1234 1615,43.86,1234 1622,43.86,1234 1630,43.86,1234 1637,43.86,1234 1645,43.86,1234 1652,43.86,1234 1700,25,1234 1707,25,1234 1715,25,1234 1722,25,1234 1730,25,1234 1737,25,1234", "1319": "1450,116.99,12 1520,137,234 1530,137,234 1540,137,234 1550,137,234 1600,96,234 1610,96,234 1620,96,234 1630,96,234 1640,96,234 1650,96,234 1700,96,234", "1391": "0840,149,234 0920,149,234 0930,149,234 0940,149,234 0950,149,234 1010,119,234 1020,119,2 1030,119,2 1040,119,234 1050,119,234 1100,119,2 1110,119,234 1120,119,234 1130,119,234 1140,119,234 1150,119,234 1200,119,234 1210,119,234 1220,119,234 1230,119,234 1250,119,234 1320,119,2 1350,119,234 1400,119,234 1410,119,234 1420,119,2 1440,119,234 1450,119,234 1500,119,234 1510,119,234 1520,119,234 1530,119,234 1540,119,234 1550,119,234 1600,119,234 1610,119,234 1620,119,234 1630,119,234 1640,119,234 1650,119,234 1700,119,234 1710,119,234 1720,119,234 1730,119,234 1740,119,234 1750,119,234 1800,119,234", "1416": "0730,120.95,12 0824,120.95,1 0900,120.95,1 0936,120.95,1 1012,120.95,1 1115,120.95,12 1124,120.95,234 1133,120.95,234 1142,120.95,234 1151,120.95,234 1200,95.99,1 1209,120.95,234 1218,120.95,234 1227,120.95,234 1236,120.95,234 1245,120.95,234 1254,120.95,234 1330,120.95,234 1339,120.95,234 1348,120.95,234 1357,120.95,234 1433,64.95,1 1451,64.95,12 1500,64.95,123 1509,64.95,234 1518,64.95,234 1527,64.95,234 1536,64.95,234 1545,64.95,234 1554,64.95,234 1603,64.95,234 1612,64.95,234 1621,64.95,234 1630,64.95,234 1639,64.95,234 1648,64.95,234 1657,64.95,234 1706,64.95,234 1715,64.95,234 1724,64.95,234 1733,64.95,234 1742,64.95,234 1751,64.95,234", "1491": "1031,94.95,1 1040,94.95,1 1244,82.95,1234 1253,82.95,12 1303,82.95,12 1322,82.95,1 1350,82.95,12 1409,82.95,1234 1419,82.95,12 1428,82.95,1234 1438,82.95,1234 1525,42.95,1 1535,42.95,1234 1544,42.95,1234 1554,42.95,1234 1603,42.95,1234 1613,42.95,1234 1622,42.95,1234 1632,42.95,1234 1641,42.95,1234 1651,42.95,1234 1700,42.95,1234 1710,42.95,1234 1719,42.95,1234 1729,42.95,1234 1738,42.95,1234", "1945": "1010,56,12 1020,56,12 1040,56,234 1110,51,1234 1120,51,1234 1130,38.99,1 1140,51,1234 1210,50,1234 1220,50,1234 1230,50,1234 1240,50,1234 1250,50,1234 1300,50,1234 1310,50,1234 1320,50,1234 1330,50,1234 1340,50,1234 1350,50,12 1420,37,12 1430,37,12 1440,37,1234 1450,37,1234 1500,36,1234 1510,36,1234 1520,36,1234 1530,36,1234 1540,36,1234 1550,36,1234 1600,36,1234 1610,36,1234 1620,36,1234 1640,36,1234 1650,36,1234 1700,27,1234 1710,27,1234", "3184": "1010,53.57,12 1050,53.57,123 1130,53.57,1234 1140,53.57,1234 1150,53.57,1234 1250,40.64,123 1330,40.64,1 1510,24.94,1234,9 1520,24.94,1234,9 1530,24.94,1,9 1540,24.94,1234,9 1550,24.94,1234,9 1600,24.94,1234,9 1610,24.94,1234,9 1620,24.94,1234,9 1630,24.94,1234,9 1640,24.94,1234,9", "4512": "0840,106,1 1140,107,123 1230,92,12 1240,92,1 1330,95,1 1350,94,12 1420,72.99,1234 1450,89,12 1510,86,1234 1520,84,1234 1530,82,1234 1540,81,1234 1550,81,1234 1600,80,1234 1610,79,1234 1620,78,1234 1630,77,1234 1640,76,1234 1650,75,1234 1700,74,1234 1710,73,1234 1720,72,1234 1730,71,1234 1740,71,1234 1750,71,1234 1800,71,1234 1810,71,1234", "4631": "1615,70,1 1645,70,234 1655,70,234 1715,45,2 1725,45,234 1735,45,234 1745,45,234 1755,45,234", "4654": "1149,76.95,234 1206,76.95,234 1214,76.95,234 1223,76.95,234 1231,76.95,234 1240,76.95,234 1248,76.95,234 1257,76.95,12 1305,76.95,12 1314,76.95,234 1322,76.95,234 1339,76.95,12 1348,76.95,234 1356,76.95,234 1521,49.95,234", "4992": "1019,63,12 1434,62,234 1443,62,12 1451,62,234 1500,56,12 1508,56,234 1517,56,234 1525,56,234 1534,56,234 1542,56,234 1551,56,234 1559,56,234 1608,57,234 1616,57,234 1625,57,234 1633,57,234 1642,57,234", "6374": "1520,60.95,1 1539,60.95,12 1549,60.95,1234 1558,60.95,1234 1608,60.95,1234 1617,60.95,1234 1627,60.95,1234 1636,60.95,1234 1646,60.95,1234 1655,60.95,1234 1705,60.95,1234 1714,60.95,1234 1724,60.95,1234 1733,60.95,1234", "7304": "0920,84,1 0940,84,1 0950,84,1 1000,85,1 1020,85,1 1050,85,12 1100,81,1234 1110,81,1234 1120,81,1234 1140,81,12 1150,81,1234 1210,84,12 1230,84,1 1240,84,1234 1250,84,1234 1300,79,12 1310,79,1234 1320,79,1234 1330,79,1234 1340,79,1234 1350,79,1234 1420,59,1 1430,59,1234 1440,59,1234 1450,59,1234 1500,52,12 1510,52,1234 1520,52,1234 1530,52,1234 1540,52,1234 1550,52,1234 1600,51,1234 1610,51,1234 1620,51,1234 1630,51,1234 1640,51,1234 1650,51,1234 1700,47,1234", "7305": "1122,65,1 1148,65,1 1156,65,1 1404,65,12 1421,65,1 1429,65,12 1438,65,1234 1446,65,1234 1503,65,1234 1512,65,1234 1520,65,1234 1529,65,1234 1537,37,1234 1546,37,1234 1554,37,1234 1603,37,1234 1611,37,1234 1620,37,1234 1628,37,1234 1637,37,1234 1645,37,1234 1654,37,1234 1702,37,1234 1711,37,1234 1719,37,1234 1728,37,1234 1736,37,1234 1745,37,1234 1753,37,1234 1802,37,1234 1810,37,1234 1819,37,1234 1827,37,1234 1836,37,1234", "7307": "1400,302.99,1 1420,302.99,1 1450,302.99,1", "7308": "0932,119,234 1708,119,234 1716,119,234", "7309": "1018,89,12 1045,89,1 1103,86,234 1112,86,234 1121,86,234 1130,86,234 1139,86,234 1148,86,234 1157,86,234 1206,87,234 1215,87,234 1224,87,234 1233,87,234 1242,87,234 1251,87,234 1300,88,1 1309,88,234 1318,88,234 1327,88,234 1336,88,234 1345,88,1 1354,88,234 1403,87,234 1412,87,234 1421,87,234 1430,87,234 1439,87,234 1457,87,234 1506,49,234 1524,49,234 1533,49,234 1542,49,234 1551,49,234 1600,46,234 1609,46,234 1618,46,234 1627,46,234 1636,46,234 1645,46,234 1654,46,234 1703,32,234 1712,32,234 1721,32,234 1730,32,234 1739,32,234 1748,32,234 1757,32,234 1806,33,234 1815,33,234 1824,33,234", "7312": "1327,119.95,234 1346,119.95,234 1424,119.95,234 1434,119.95,12 1443,119.95,234", "7493": "1052,149,1 1116,139,234 1140,139,12 1148,139,12 1156,139,234 1228,109,1 1540,65,12 1548,65,234 1628,65,1 1644,65,234 1652,65,234 1700,65,234 1708,65,234 1716,65,234 1724,65,234 1748,65,234 1756,65,234 1804,65,234", "9413": "1050,65,1 1400,65,123 1430,65,1 1440,65,12 1450,65,1 1500,47,12 1520,47,1234 1530,47,1234 1540,47,1234 1600,47,1 1610,47,1234 1620,47,1234 1630,47,1234 1640,47,1234", "9414": "1100,53,12 1510,33,1 1530,33,12 1540,33,1234 1550,33,1234 1600,33,1234 1610,33,1234 1620,33,1234 1630,33,1234 1640,33,1234", "9415": "0845,53,1 1115,53,1 1425,53,1 1515,33,1234 1525,33,1234 1535,33,1234 1545,33,1234 1555,33,1234 1605,33,1234 1615,33,1234 1625,33,1234 1635,33,12", "10769": "0732,50.81,12 0804,50.81,12 0820,50.81,12 0828,50.81,1234 0836,50.81,12 0852,50.81,1234 0908,50.81,12 0916,50.81,1234 0924,50.81,234 0932,50.81,1234 0940,50.81,1234 0948,50.81,1234 0956,50.81,1234 1004,50.81,12 1012,50.81,12 1020,50.81,1234 1036,50.81,1234 1044,50.81,1234 1052,50.81,1234 1100,50.81,1234 1108,50.81,1234 1116,50.81,1234 1124,50.81,1234 1132,50.81,1234 1140,50.81,1234 1148,50.81,1234 1156,50.81,1234 1204,50.81,1234 1212,50.81,1234 1220,50.81,1234 1228,50.81,1234 1236,50.81,1234 1244,50.81,1234 1252,50.81,1234 1300,44.34,1234 1308,44.34,1234 1316,44.34,1234 1324,44.34,1234 1332,44.34,1234 1340,44.34,1234 1348,44.34,1234 1356,44.34,1234 1404,44.34,12 1412,44.34,1234 1420,44.34,1234 1428,44.34,1234 1436,44.34,1234 1444,44.34,1234 1500,35.1,12 1508,35.1,1234 1516,35.1,1234 1524,35.1,1234 1532,35.1,1234 1540,35.1,1234 1548,35.1,1234 1556,35.1,1234 1604,35.1,1234 1612,35.1,1234 1620,35.1,1234 1628,35.1,1234 1636,35.1,1234 1644,35.1,1234 1652,35.1,1234 1700,25.87,1234 1708,25.87,1234 1716,25.87,1234 1724,25.87,1234 1732,25.87,1234 1740,25.87,1234 1748,25.87,1234 1756,25.87,1234 1804,25.87,1234 1812,25.87,1234 1820,25.87,1234 1828,25.87,1234", "12113": "1323,149,1 1333,149,12", "14613": "0818,144,234 0954,144,2 1010,144,2 1154,109,2 1522,89,23 1626,59,234 1650,59,234 1658,59,234 1722,59,234 1746,59,234 1818,59,234"}}}}/*END*/;
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad = n => String(n).padStart(2, "0");
+const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const parseIso = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const short = s => { const d = parseIso(s); return DOW[d.getDay()] + " " + (d.getMonth() + 1) + "/" + d.getDate(); };
+const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "x";
+const initials = n => n.split(/\s+/).map(w => w[0]).join("").replace(".", "").slice(0, 3).toUpperCase();
+const ls = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch(e){} } };
+function toast(msg){ const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2400); }
+function hexToRgba(h, a){ const n = parseInt(h.slice(1), 16); return "rgba(" + (n >> 16) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
+
+/* ---------- season color (box outlines change with the holidays) ---------- */
+function season(d){
+  const m = d.getMonth(), day = d.getDate();
+  if (m === 9) return ["#f28a2e", "Halloween"];
+  if (m === 10) return day <= 28 ? ["#d9893a", "Thanksgiving"] : ["#3fbf6a", "Christmas"];
+  if (m === 11) return ["#3fbf6a", "Christmas"];
+  if (m === 0) return ["#8fc6e8", "Winter"];
+  if (m === 1) return ["#ff6b8a", "Valentine's"];
+  if (m === 2) return ["#59c977", "St. Patrick's"];
+  if (m === 3) return ["#5aa9ff", "April"];
+  if (m === 4) return ["#e9b3d6", "Spring bloom"];
+  if (m === 5 || m === 6) return ["#ff5d52", "Summer"];
+  if (m === 7) return ["#f2c94c", "Dog days"];
+  return ["#e0a33a", "Fall"];
+}
+(() => {
+  const [c, name] = season(new Date());
+  const r = document.documentElement.style;
+  r.setProperty("--season", c); r.setProperty("--season-soft", hexToRgba(c, .38)); r.setProperty("--season-bg", hexToRgba(c, .10));
+  $("seasonName").textContent = name;
+})();
+
+/* ---------- state ---------- */
+const ROSTER = [...DATA.groups.g1, ...DATA.groups.g2, ...DATA.groups.maybe];
+const S = {
+  me: ls.get("golf.me") || "",
+  mode: "golf",
+  weekOffset: 0,
+  size: 4,
+  area: "All",
+  avail: {},        // name -> {days:[], trip:[]}
+  rounds: [],       // {id, date, time, course, players:[], note}
+  owes: [],
+  posts: [],
+  votes: {},        // courseId -> [names]
+  weather: DATA.weather,
+  stats: null,
+  db: null,
+  canWrite: null,   // true / false / null (unknown — try and see)
+  live: false,
+  dirtyMine: false,
+  editing: null     // round being edited (object) or null
+};
+if (!ROSTER.includes(S.me)) S.me = "";
+
+/* ---------- db wiring ---------- */
+async function boot(){
+  renderAll();
+  let db = null, user = null;
+  try { db = await window.claude?.use?.("db"); } catch(e) { db = null; }
+  try { user = await window.claude?.use?.("user"); } catch(e) { user = null; }
+  if (user) { try { S.canWrite = await user.can("data.write"); } catch(e) {} }
+  if (!db) { S.db = null; S.live = false; S.canWrite = false; renderAll(); return; }
+  S.db = db; S.live = true;
+  const watch = (col, fn) => db.collection(col).onSnapshot(snap => { fn(snap.docs.filter(d => d.exists).map(d => ({ id: d.id, ...d.data() }))); renderAll(); }, () => {});
+  watch("avail", rows => { const a = {}; rows.forEach(r => { if (r.name) a[r.name] = { days: r.days || [], trip: r.trip || [] }; }); if (S.dirtyMine && S.me && S.avail[S.me]) a[S.me] = S.avail[S.me]; S.avail = a; });
+  watch("rounds", rows => { S.rounds = rows; });
+  watch("owes", rows => { S.owes = rows; });
+  watch("posts", rows => { S.posts = rows.sort((a, b) => String(b.ts).localeCompare(String(a.ts))).slice(0, 40); });
+  watch("coursevotes", rows => { const v = {}; rows.forEach(r => v[r.id] = r.names || []); S.votes = v; });
+  watch("meta", rows => { rows.forEach(r => {
+    if (r.id === "weather" && Array.isArray(r.days) && r.days.length) S.weather = r;
+    if (r.id === "arccos") S.stats = r;
+    if (r.id === "courses" && Array.isArray(r.list) && r.list.length) { DATA.courses = r.list; renderAreaSeg(); }
+    if (r.id === "meetup" && Array.isArray(r.list) && r.list.length) DATA.meetup = r.list;
+    if (r.id === "trip" && r.name) DATA.trip = r;
+    if (r.id === "tee" && r.days && r.as_of && (!TEE.as_of || r.as_of > TEE.as_of)) TEE = r;
+  }); });
+}
+async function write(path, data, del){
+  if (!S.db || S.canWrite === false) return false;
+  try {
+    const ref = S.db.doc(path);
+    if (del) await ref.delete(); else await ref.set(data);
+    return true;
+  } catch (e) {
+    if (e && (e.code === "invalid_argument" || e.code === "revoked" || e.code === "not_granted")) { S.canWrite = false; renderAll(); }
+    else if (e && e.code === "unavailable") { await new Promise(r => setTimeout(r, 600 + Math.random() * 600)); try { const ref = S.db.doc(path); if (del) await ref.delete(); else await ref.set(data); return true; } catch (e2) {} }
+    return false;
+  }
+}
+const saves = () => S.db && S.canWrite !== false;
+
+/* ---------- top summary ---------- */
+function upcomingDates(n){ const out = []; const d = new Date(); d.setHours(0,0,0,0); for (let i = 0; i < n; i++){ out.push(iso(d)); d.setDate(d.getDate() + 1); } return out; }
+function openOn(date, kind){ return ROSTER.filter(n => (S.avail[n]?.[kind === "trip" ? "trip" : "days"] || []).includes(date)); }
+function renderSummary(){
+  const today = iso(new Date());
+  const next = S.rounds.filter(r => r.date >= today).sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")))[0];
+  if (next) {
+    $("nextWhen").textContent = short(next.date) + (next.time ? " · " + fmtTime(next.time) : "");
+    $("nextWhat").innerHTML = "<b>" + esc(next.course) + "</b>" + (next.players?.length ? " · " + esc(next.players.join(", ")) : "");
+  } else { $("nextWhen").textContent = "—"; $("nextWhat").textContent = "Nothing booked yet. Tap + Add a round."; }
+
+  const scored = upcomingDates(45).map(d => ({ d, who: openOn(d, "golf") })).filter(x => x.who.length).sort((a, b) => b.who.length - a.who.length || a.d.localeCompare(b.d)).slice(0, 3);
+  $("bestDays").innerHTML = scored.length ? scored.map(x => "<li><span class='d'>" + esc(short(x.d)) + "</span><span class='n'>" + x.who.length + " open · " + esc(x.who.join(", ")) + "</span></li>").join("") : "<li class='sub'>Nobody has marked days yet.</li>";
+
+  const days = S.weather?.days || [];
+  const best = days.filter(isBestWx)[0];
+  $("wxBest").textContent = best ? best.day : "—";
+  $("wxBestCap").textContent = best ? best.hi + "° / " + best.lo + "° · " + best.wind + " · " + best.rain + "% rain" : (days.length ? "No calm, dry mornings this week." : "");
+
+  const soon = upcomingDates(31);
+  const inCount = ROSTER.filter(n => (S.avail[n]?.days || []).some(d => soon.includes(d)) || (S.avail[n]?.trip || []).some(d => d >= today)).length;
+  $("crewIn").textContent = inCount + " / " + ROSTER.length;
+  $("crewInCap").textContent = S.me ? "You're " + S.me + ". Tap days on the calendar." : "Pick your name, then tap the days you can play.";
+}
+function fmtTime(t){ const [h, m] = t.split(":").map(Number); if (isNaN(h)) return t; const ap = h >= 12 ? "pm" : "am"; return ((h + 11) % 12 + 1) + ":" + pad(m || 0) + ap; }
+
+/* ---------- banner / sync state ---------- */
+function renderSync(){
+  const m = $("syncMeta");
+  if (S.live && S.canWrite !== false) { m.className = "meta live"; m.textContent = "Live · saves for everyone"; }
+  else if (S.live) { m.className = "meta local"; m.textContent = "View only · copy your days to the group text"; }
+  else { m.className = "meta local"; m.textContent = "View only"; }
+  const b = $("banner");
+  if (!S.me) { b.hidden = false; b.innerHTML = "<b>Start here:</b> pick your name up top, then tap every day you can play. Switch to <b>Trip days</b> for the golf trip."; }
+  else b.hidden = true;
+  $("whoBox").classList.toggle("need", !S.me);
+  const cb = $("copyBar");
+  const mine = S.avail[S.me];
+  const hasMine = mine && (mine.days.length || mine.trip.length);
+  cb.hidden = !(S.me && hasMine && !saves());
+  if (!cb.hidden) {
+    $("copyWhy").textContent = "This page saves for Nate. Paste your days in the group text and he'll add them.";
+    const futureDays = mine.days.filter(d => d >= iso(new Date())).sort();
+    const futureTrip = mine.trip.filter(d => d >= iso(new Date())).sort();
+    let txt = S.me + " can golf: " + (futureDays.length ? futureDays.map(short).join(", ") : "none picked");
+    if (futureTrip.length) txt += ". Trip days: " + futureTrip.map(short).join(", ");
+    $("copyText").value = txt + ".";
+  }
+}
+
+/* ---------- calendar ---------- */
+function weekStart(){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - d.getDay() + S.weekOffset * 7); return d; }
+function renderCal(){
+  const start = weekStart();
+  const end = new Date(start); end.setDate(end.getDate() + 41);
+  $("mname").textContent = MON[start.getMonth()] + " " + start.getDate() + " – " + MON[end.getMonth()] + " " + end.getDate();
+  const today = iso(new Date());
+  let h = DOW.map(d => "<div class='dow'>" + d + "</div>").join("");
+  const d = new Date(start);
+  for (let i = 0; i < 42; i++) {
+    const ds = iso(d);
+    const past = ds < today;
+    const kind = S.mode;
+    const who = openOn(ds, kind);
+    const mine = S.me && who.includes(S.me);
+    const n = who.length;
+    const cls = ["cell"]; if (d.getDay() === 0 || d.getDay() === 6) cls.push("wknd"); if (past) cls.push("past"); if (ds === today) cls.push("is-today"); if (mine) cls.push("mine");
+    const heat = n >= 6 ? "h3" : n >= 4 ? "h2" : n >= 1 ? "h1" : "";
+    const label = (d.getDate() === 1 || i === 0) ? MON[d.getMonth()] + " " + d.getDate() : d.getDate();
+    const rounds = S.rounds.filter(r => r.date === ds).sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+    h += "<div class='" + cls.join(" ") + "' data-date='" + ds + "' role='button' tabindex='" + (past ? -1 : 0) + "' aria-label='" + esc(short(ds) + ", " + n + " open" + (mine ? ", you're in" : "")) + "'>" +
+      "<div class='top1'><span class='dn'>" + label + "</span>" + (n ? "<span class='cnt " + heat + "'>" + n + "</span>" : "") + "</div>" +
+      rounds.map(r => "<button type='button' class='chip' data-round='" + esc(r.id) + "' title='" + esc((r.time ? fmtTime(r.time) + " " : "") + r.course) + "'>" + (r.time ? "<b>" + esc(fmtTime(r.time)) + "</b>" : "") + esc(shortCourse(r.course)) + "</button>").join("") +
+      (n ? "<div class='inits'>" + who.map(w => "<i class='" + (w === S.me ? "me" : "") + (kind === "trip" ? " trip" : "") + "' title='" + esc(w) + "'>" + esc(initials(w)) + "</i>").join("") + "</div>" : "") +
+      "</div>";
+    d.setDate(d.getDate() + 1);
+  }
+  $("grid").innerHTML = h;
+}
+function shortCourse(c){ return String(c || "").replace(/ Golf (Club|Course|Park)/i, "").replace(/^The /, ""); }
+
+function toggleDay(ds){
+  if (!S.me) { $("whoBox").classList.add("need"); $("me").focus(); toast("Pick your name first"); return; }
+  const key = S.mode === "trip" ? "trip" : "days";
+  const cur = S.avail[S.me] || { days: [], trip: [] };
+  const set = new Set(cur[key]);
+  set.has(ds) ? set.delete(ds) : set.add(ds);
+  S.avail[S.me] = { ...cur, [key]: [...set].sort() };
+  S.dirtyMine = true;
+  renderAll();
+  queueSaveMine();
+}
+let saveTimer = null;
+function queueSaveMine(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const me = S.me, mine = S.avail[me];
+    if (!me || !mine) return;
+    const ok = await write("avail/" + slug(me), { name: me, days: mine.days, trip: mine.trip, updated: new Date().toISOString() });
+    S.dirtyMine = false;
+    if (ok) toast("Saved your days");
+    renderSync();
+  }, 700);
+}
+
+/* ---------- drag rounds between days ---------- */
+let drag = null;
+document.addEventListener("pointerdown", e => {
+  const chip = e.target.closest(".chip"); if (!chip) return;
+  e.stopPropagation();
+  drag = { id: chip.dataset.round, x: e.clientX, y: e.clientY, moved: false, ghost: null, over: null };
+  chip.setPointerCapture?.(e.pointerId);
+});
+document.addEventListener("pointermove", e => {
+  if (!drag) return;
+  if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return;
+  if (!drag.moved) {
+    drag.moved = true; document.body.classList.add("dragging");
+    const r = S.rounds.find(x => x.id === drag.id);
+    drag.ghost = document.createElement("div"); drag.ghost.className = "ghost"; drag.ghost.textContent = r ? shortCourse(r.course) : "Round"; document.body.appendChild(drag.ghost);
+  }
+  drag.ghost.style.left = e.clientX + "px"; drag.ghost.style.top = e.clientY + "px";
+  const cell = document.elementFromPoint(e.clientX, e.clientY)?.closest(".cell");
+  if (drag.over && drag.over !== cell) drag.over.classList.remove("drop");
+  if (cell && !cell.classList.contains("past")) { cell.classList.add("drop"); drag.over = cell; } else drag.over = null;
+});
+document.addEventListener("pointerup", async e => {
+  if (!drag) return;
+  const d = drag; drag = null;
+  document.body.classList.remove("dragging"); d.ghost?.remove(); d.over?.classList.remove("drop");
+  const r = S.rounds.find(x => x.id === d.id); if (!r) return;
+  if (!d.moved) { openEditor(r); return; }
+  const target = d.over?.dataset.date;
+  if (!target || target === r.date) return;
+  const updated = { ...r, date: target }; delete updated.id;
+  const i = S.rounds.findIndex(x => x.id === d.id); S.rounds[i] = { ...updated, id: d.id };
+  renderAll();
+  if (await write("rounds/" + d.id, updated)) toast("Moved to " + short(target));
+  else toast("Moved here only. Tell Nate to move it.");
+});
+document.addEventListener("pointercancel", () => { if (drag) { document.body.classList.remove("dragging"); drag.ghost?.remove(); drag.over?.classList.remove("drop"); drag = null; } });
+
+$("grid").addEventListener("click", e => {
+  if (e.target.closest(".chip")) return;
+  const cell = e.target.closest(".cell"); if (!cell || cell.classList.contains("past")) return;
+  toggleDay(cell.dataset.date);
+});
+$("grid").addEventListener("keydown", e => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const chip = e.target.closest(".chip");
+  if (chip) { e.preventDefault(); const r = S.rounds.find(x => x.id === chip.dataset.round); if (r) openEditor(r); return; }
+  const cell = e.target.closest(".cell"); if (!cell || cell.classList.contains("past")) return;
+  e.preventDefault(); toggleDay(cell.dataset.date);
+});
+
+/* ---------- round editor ---------- */
+function openEditor(r){
+  S.editing = r ? { ...r, players: [...(r.players || [])] } : { id: null, date: iso(new Date(Date.now() + 86400000)), time: "09:00", course: DATA.courses[0].name, players: S.me ? [S.me] : [], note: "" };
+  renderEditor();
+  $("editor").scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+function renderEditor(){
+  const r = S.editing, box = $("editor");
+  if (!r) { box.innerHTML = ""; return; }
+  const opts = [...DATA.courses.map(c => c.name), DATA.trip.name, ...DATA.meetup.filter(m => /sim/i.test(m.type)).map(m => m.name)];
+  if (r.course && !opts.includes(r.course)) opts.unshift(r.course);
+  box.innerHTML = "<div class='editor'>" +
+    "<h3>" + (r.id ? "Round" : "New round") + "</h3>" +
+    "<div class='frow'>" +
+      "<label class='field'><span class='lbl'>Course</span><select id='edCourse'>" + opts.map(o => "<option" + (o === r.course ? " selected" : "") + ">" + esc(o) + "</option>").join("") + "</select></label>" +
+      "<label class='field'><span class='lbl'>Day</span><input id='edDate' type='date' value='" + esc(r.date) + "'></label>" +
+      "<label class='field'><span class='lbl'>Tee time</span><input id='edTime' type='time' value='" + esc(r.time || "") + "'></label>" +
+    "</div>" +
+    "<div class='field'><span class='lbl'>Who's playing (" + r.players.length + ")</span><div class='pchips' id='edPlayers'>" + ROSTER.map(n => "<button type='button' data-n='" + esc(n) + "' aria-pressed='" + r.players.includes(n) + "'>" + esc(n) + "</button>").join("") + "</div></div>" +
+    "<label class='field'><span class='lbl'>Note</span><input id='edNote' value='" + esc(r.note || "") + "' placeholder='Cart, bet, who books it…'></label>" +
+    "<div class='erow'><button type='button' class='btn sm primary' id='edSave'>" + (r.id ? "Save" : "Add round") + "</button>" +
+      (r.id ? "<button type='button' class='btn sm' id='edDel'>Delete</button>" : "") +
+      "<button type='button' class='btn sm' id='edClose'>Close</button></div>" +
+  "</div>";
+  $("edPlayers").onclick = e => { const b = e.target.closest("button"); if (!b) return; const n = b.dataset.n; const i = r.players.indexOf(n); i >= 0 ? r.players.splice(i, 1) : r.players.push(n); renderEditor(); };
+  ["edCourse", "edDate", "edTime", "edNote"].forEach(id => $(id).addEventListener("change", () => { r.course = $("edCourse").value; r.date = $("edDate").value; r.time = $("edTime").value; r.note = $("edNote").value; }));
+  $("edClose").onclick = () => { S.editing = null; renderEditor(); };
+  $("edSave").onclick = async () => {
+    r.course = $("edCourse").value; r.date = $("edDate").value || r.date; r.time = $("edTime").value; r.note = $("edNote").value.trim();
+    const id = r.id || ("r" + Date.now().toString(36));
+    const body = { date: r.date, time: r.time, course: r.course, players: r.players, note: r.note };
+    const i = S.rounds.findIndex(x => x.id === id);
+    if (i >= 0) S.rounds[i] = { ...body, id }; else S.rounds.push({ ...body, id });
+    S.editing = null; renderAll();
+    toast(await write("rounds/" + id, body) ? "Round saved" : "Saved here only. Send it to Nate.");
+  };
+  if (r.id) $("edDel").onclick = async () => {
+    if ($("edDel").dataset.sure !== "1") { $("edDel").dataset.sure = "1"; $("edDel").textContent = "Tap again to delete"; return; }
+    S.rounds = S.rounds.filter(x => x.id !== r.id); S.editing = null; renderAll();
+    toast(await write("rounds/" + r.id, null, true) ? "Round deleted" : "Removed here only");
+  };
+}
+$("addRound").onclick = () => openEditor(null);
+
+/* ---------- groups ---------- */
+function renderGroups(){
+  const month = upcomingDates(31);
+  const active = n => (S.avail[n]?.days || []).some(d => month.includes(d));
+  const g = (title, list) => "<div><h3>" + esc(title) + "</h3><div class='names'>" + list.map(n => "<span class='" + (active(n) ? "in" : "") + "'>" + esc(n) + "</span>").join("") + "</div></div>";
+  $("groups").innerHTML = g("Group 1", DATA.groups.g1) + g("Group 2", DATA.groups.g2) + g("Maybe", DATA.groups.maybe);
+}
+
+/* ---------- weather ---------- */
+function isBestWx(w){ return Number(w.rain) <= 20 && Number(w.windMax ?? 99) <= 15; }
+function renderWx(){
+  const w = S.weather;
+  if (!w || !w.days?.length) { $("wx").innerHTML = "<div class='empty' style='grid-column:1/-1'>Forecast not loaded.</div>"; return; }
+  $("wxMeta").textContent = (w.place || "The Colony") + " · " + (w.as_of || "");
+  $("wx").innerHTML = w.days.slice(0, 7).map(d => "<div class='" + (isBestWx(d) ? "best" : Number(d.rain) >= 50 ? "wet" : "") + "' title='" + esc(d.sky) + "'>" +
+    "<span class='d'>" + esc(d.day) + "</span><span class='t'>" + esc(d.hi) + "°<small> " + esc(d.lo) + "°</small></span><span class='sky'>" + esc(d.sky) + "</span><span class='r'>" + esc(d.rain) + "% rain</span><span class='w'>" + esc(d.wind) + "</span></div>").join("");
+}
+
+/* ---------- courses ---------- */
+function renderAreaSeg(){
+  const areas = ["All", ...new Set(DATA.courses.map(c => c.area))];
+  $("areaSeg").innerHTML = areas.map(a => "<button type='button' data-a='" + esc(a) + "' aria-pressed='" + (a === S.area) + "'>" + esc(a) + "</button>").join("");
+}
+$("areaSeg").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.area = b.dataset.a; renderAreaSeg(); renderCourses(); });
+$("sizeSeg").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.size = Number(b.dataset.n); [...$("sizeSeg").children].forEach(x => x.setAttribute("aria-pressed", x === b)); renderCourses(); });
+function mapUrl(c){ return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(c.name + " " + (c.address || c.city)); }
+function renderCourses(){
+  const list = DATA.courses.filter(c => S.area === "All" || c.area === S.area)
+    .map(c => ({ c, v: S.votes[c.id] || [] }))
+    .sort((a, b) => b.v.length - a.v.length);
+  $("courses").innerHTML = list.map(({ c, v }) => {
+    const mine = S.me && v.includes(S.me);
+    return "<article class='course" + (v.length >= 3 ? " fav" : "") + "'>" +
+      "<div><h3>" + esc(c.name) + "</h3><div class='city'>" + esc(c.city) + (c.holes ? " · " + esc(c.holes) + " holes" : "") + "</div></div>" +
+      (c.rate ? "<div class='rate'>" + esc(c.rate) + "</div>" : "") +
+      (c.note ? "<p class='note'>" + esc(c.note) + "</p>" : "") +
+      (c.phone ? "<div class='phone'>" + esc(c.phone) + "</div>" : "") +
+      "<div class='acts'>" +
+        (c.book ? "<a class='btn sm primary' href='" + esc(c.book) + "' target='_blank' rel='noopener'>Book for " + S.size + "</a>" : "") +
+        (c.phone ? "<a class='btn sm' href='tel:" + esc(c.phone.replace(/[^0-9+]/g, "")) + "'>Call</a>" : "") +
+        "<a class='btn sm' href='" + esc(mapUrl(c)) + "' target='_blank' rel='noopener'>Map</a>" +
+        (c.web && c.web !== c.book ? "<a class='btn sm' href='" + esc(c.web) + "' target='_blank' rel='noopener'>Site</a>" : "") +
+      "</div>" +
+      "<div class='votes'><button type='button' class='btn sm" + (mine ? " on" : "") + "' data-vote='" + esc(c.id) + "'>" + (mine ? "✓ I'm in" : "I'd play here") + "</button>" +
+        (v.length ? "<span>" + v.length + " want it · " + esc(v.join(", ")) + "</span>" : "<span>No votes yet</span>") + "</div>" +
+    "</article>";
+  }).join("");
+}
+$("courses").addEventListener("click", async e => {
+  const b = e.target.closest("[data-vote]"); if (!b) return;
+  if (!S.me) { $("whoBox").classList.add("need"); $("me").focus(); toast("Pick your name first"); return; }
+  const id = b.dataset.vote; const v = new Set(S.votes[id] || []);
+  v.has(S.me) ? v.delete(S.me) : v.add(S.me);
+  S.votes[id] = [...v]; renderCourses(); renderSummary();
+  if (!(await write("coursevotes/" + id, { names: [...v] }))) toast("Counted here only. Tell the group text.");
+});
+
+/* ---------- trip + meet up ---------- */
+function renderTrip(){
+  const t = DATA.trip;
+  const today = iso(new Date());
+  const tally = {};
+  ROSTER.forEach(n => (S.avail[n]?.trip || []).filter(d => d >= today).forEach(d => { (tally[d] = tally[d] || []).push(n); }));
+  const top = Object.entries(tally).sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0])).slice(0, 4);
+  $("trip").innerHTML = "<div class='spot'><h3>" + esc(t.name) + "</h3><div class='sub'>" + esc(t.location || "") + "</div>" +
+    (t.rate_note ? "<div class='mono' style='color:var(--season);font-size:13px'>" + esc(t.rate_note) + "</div>" : "") +
+    (t.note ? "<p class='note' style='font-size:13px;color:var(--ink2)'>" + esc(t.note) + "</p>" : "") +
+    (t.phone ? "<div class='mono sub' style='user-select:all'>" + esc(t.phone) + "</div>" : "") +
+    "<div class='acts'>" + (t.book ? "<a class='btn sm primary' target='_blank' rel='noopener' href='" + esc(t.book) + "'>Book</a>" : "") +
+    (t.web ? "<a class='btn sm' target='_blank' rel='noopener' href='" + esc(t.web) + "'>Site</a>" : "") +
+    "<a class='btn sm' target='_blank' rel='noopener' href='" + esc(mapUrl({ name: t.name, city: t.location })) + "'>Map</a></div></div>" +
+    "<div class='spot'><div class='lbl'>Best trip days so far</div>" +
+    (top.length ? "<ul class='bestlist'>" + top.map(([d, w]) => "<li><span class='d'>" + esc(short(d)) + "</span><span class='n'>" + w.length + " · " + esc(w.join(", ")) + "</span></li>").join("") + "</ul>" : "<p class='sub'>Nobody yet. Switch the calendar to Trip days and tap the days you could go.</p>") +
+    "</div>";
+}
+function renderMeetup(){
+  $("meetup").innerHTML = DATA.meetup.map(m => "<div class='spot'><div style='display:flex;justify-content:space-between;gap:8px;align-items:baseline'><h3>" + esc(m.name) + "</h3><span class='tag season'>" + esc(m.type) + "</span></div>" +
+    (m.address ? "<div class='sub'>" + esc(m.address) + "</div>" : "") +
+    (m.note ? "<div style='font-size:13px;color:var(--ink2)'>" + esc(m.note) + "</div>" : "") +
+    (m.phone ? "<div class='mono sub' style='user-select:all'>" + esc(m.phone) + "</div>" : "") +
+    "<div class='acts'>" + (m.phone ? "<a class='btn sm' href='tel:" + esc(m.phone.replace(/[^0-9+]/g, "")) + "'>Call</a>" : "") +
+    "<a class='btn sm' target='_blank' rel='noopener' href='" + esc(mapUrl(m)) + "'>Map</a>" +
+    (m.web ? "<a class='btn sm' target='_blank' rel='noopener' href='" + esc(m.web) + "'>Site</a>" : "") + "</div></div>").join("");
+}
+
+/* ---------- money ---------- */
+const money = n => "$" + (Math.round(Number(n) * 100) / 100).toFixed(Number(n) % 1 ? 2 : 0);
+function renderOwes(){
+  const rows = [...S.owes].sort((a, b) => Number(a.paid) - Number(b.paid) || String(b.ts || "").localeCompare(String(a.ts || "")));
+  const unpaid = rows.filter(r => !r.paid).reduce((s, r) => s + (Number(r.amount) || 0), 0);
+  $("owedTotal").textContent = money(unpaid);
+  $("owes").innerHTML = rows.length ? rows.map(r => "<li><div class='t'><b>" + esc(r.who) + "</b> → " + esc(r.to) + (r.amount ? " · <span class='mono'>" + esc(money(r.amount)) + "</span>" : " · <span class='sub'>amount TBD</span>") + "<small>" + esc(r.for || "") + "</small></div>" +
+    "<button type='button' class='btn sm" + (r.paid ? " on" : "") + "' data-paid='" + esc(r.id) + "'>" + (r.paid ? "✓ Paid" : "Mark paid") + "</button></li>").join("") : "<li class='empty'>Nobody owes anybody. Yet.</li>";
+}
+$("owes").addEventListener("click", async e => {
+  const b = e.target.closest("[data-paid]"); if (!b) return;
+  const r = S.owes.find(x => x.id === b.dataset.paid); if (!r) return;
+  r.paid = !r.paid; renderOwes();
+  const body = { ...r }; delete body.id;
+  if (!(await write("owes/" + r.id, body))) toast("Changed here only. Tell Nate.");
+});
+$("oweForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const id = "o" + Date.now().toString(36);
+  const body = { who: $("oweWho").value.trim(), to: $("oweTo").value.trim(), amount: parseFloat(String($("oweAmt").value).replace(/[^0-9.]/g, "")) || null, for: $("oweFor").value.trim(), paid: false, ts: new Date().toISOString() };
+  if (!body.who || !body.to) return;
+  S.owes.push({ ...body, id }); renderOwes(); e.target.reset();
+  toast(await write("owes/" + id, body) ? "Added" : "Added here only. Tell Nate.");
+});
+
+/* ---------- clubhouse ---------- */
+const JOKES = [
+  "My handicap? I'm a golfer. That's the handicap.",
+  "Golf is a game where you yell fore, shoot six and write down five.",
+  "The ball retriever is the most-used club in Jeff's bag. Allegedly.",
+  "We don't keep score. We keep receipts.",
+  "Mulligans are like Tight Ends wings: everyone claims they only had one.",
+  "If you're not three-putting, you're not trying hard enough to make the group feel better.",
+  "Breakfast ball, lunch ball, dinner ball. It's a full day out here.",
+  "Forecast: 100% chance of somebody blaming the wind.",
+  "The cart is the only thing on this course that goes straight.",
+  "Practice swing: perfect. Real swing: a crime scene."
+];
+function renderJoke(){ const d = new Date(); const i = (d.getFullYear() * 400 + d.getMonth() * 31 + d.getDate()) % JOKES.length; $("joke").innerHTML = esc(JOKES[i]) + "<small>Joke of the day · new one tomorrow</small>"; }
+function renderPosts(){
+  $("posts").innerHTML = S.posts.length ? S.posts.map(p => "<div class='post'><span class='by'>" + esc(p.who || "Someone") + " · " + esc(p.ts ? short(p.ts.slice(0, 10)) : "") + "</span><span>" + esc(p.text) + "</span>" +
+    (p.link && /^https?:\/\//.test(p.link) ? "<a href='" + esc(p.link) + "' target='_blank' rel='noopener'>" + esc(p.link) + "</a>" : "") + "</div>").join("") : "<div class='empty'>No posts yet. Drop the first meme.</div>";
+}
+$("postForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!S.me) { $("whoBox").classList.add("need"); $("me").focus(); toast("Pick your name first"); return; }
+  const id = "p" + Date.now().toString(36);
+  const body = { who: S.me, text: $("postText").value.trim(), link: $("postLink").value.trim(), ts: new Date().toISOString() };
+  if (!body.text) return;
+  S.posts.unshift({ ...body, id }); renderPosts(); e.target.reset();
+  toast(await write("posts/" + id, body) ? "Posted" : "Only you can see this one. Post it in the group text.");
+});
+
+/* ---------- arccos ---------- */
+function renderStats(){
+  const s = S.stats; $("statsSec").hidden = !s;
+  if (!s) return;
+  $("statsMeta").textContent = s.as_of || "";
+  const items = (s.items || []).map(x => "<div><div class='lbl'>" + esc(x.label) + "</div><div class='big' style='font-size:26px'>" + esc(x.value) + "</div></div>").join("");
+  $("stats").innerHTML = "<div style='display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px'>" + items + "</div>";
+}
+
+/* ---------- copy ---------- */
+$("copyDays").onclick = async () => {
+  const t = $("copyText");
+  try { await navigator.clipboard.writeText(t.value); toast("Copied. Paste it in the group text."); }
+  catch (e) { t.focus(); t.select(); toast("Selected. Copy it and paste in the group text."); }
+};
+
+/* ---------- tee times now ---------- */
+let TEE = DATA.tee || { days: {}, facs: [] };
+const T = { day: null, players: 4, start: null, dist: 30, sort: "soon" };
+const mins = hhmm => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(2));
+const clock = m => { const h = Math.floor(m / 60), mm = m % 60; return ((h + 11) % 12 + 1) + ":" + pad(mm) + (h >= 12 ? "p" : "a"); };
+function teeDays(){ return Object.keys(TEE.days || {}).sort().filter(d => d >= iso(new Date())); }
+function teeDefaults(){
+  const days = teeDays();
+  if (!T.day || !days.includes(T.day)) T.day = days[0] || null;
+  if (T.start == null) {
+    const now = new Date();
+    if (T.day === iso(now)) T.start = Math.max(300, Math.floor((now.getHours() * 60 + now.getMinutes()) / 30) * 30);
+    else T.start = 420;
+  }
+}
+function segHtml(items, cur, attr){ return items.map(([v, l]) => "<button type='button' data-" + attr + "='" + esc(v) + "' aria-pressed='" + (String(v) === String(cur)) + "'>" + esc(l) + "</button>").join(""); }
+function renderTee(){
+  teeDefaults();
+  const days = teeDays();
+  const asOf = TEE.as_of ? new Date(TEE.as_of) : null;
+  $("teeMeta").textContent = asOf ? "GolfNow · checked " + DOW[asOf.getDay()] + " " + clock(asOf.getHours() * 60 + asOf.getMinutes()) : "";
+  $("teeDay").innerHTML = days.length ? segHtml(days.map(d => [d, d === iso(new Date()) ? "Today" : short(d)]), T.day, "day") : "";
+  $("teePlayers").innerHTML = segHtml([[1, "1 player"], [2, "2"], [3, "3"], [4, "4"]], T.players, "pl");
+  $("teeDist").innerHTML = segHtml([[10, "10 mi"], [20, "20 mi"], [30, "30 mi"]], T.dist, "dist");
+  $("teeSort").innerHTML = segHtml([["soon", "Soonest"], ["cheap", "Cheapest"], ["close", "Closest"]], T.sort, "sort");
+  let opts = ""; for (let m = 300; m <= 1140; m += 30) opts += "<option value='" + m + "'" + (m === T.start ? " selected" : "") + ">" + clock(m) + "</option>";
+  $("teeStart").innerHTML = opts;
+  $("teeTo").textContent = "to " + clock(T.start + 180);
+  if (!T.day) { $("teeList").innerHTML = "<div class='empty'>No tee times loaded for upcoming days yet. They refresh a few times a day.</div>"; return; }
+  const rows = (TEE.days[T.day]) || {};
+  const pl = String(T.players);
+  const list = (TEE.facs || []).filter(f => f.d <= T.dist).map(f => {
+    const times = String(rows[f.id] || "").split(" ").filter(Boolean).map(s => { const [t, p, ru, h] = s.split(","); return { m: mins(t), p: p === "" ? null : Number(p), ru: ru || "1234", h: h ? Number(h) : 18 }; })
+      .filter(x => x.ru.includes(pl) && x.m >= T.start && x.m <= T.start + 180);
+    return { f, times };
+  }).filter(x => x.times.length);
+  const minP = x => Math.min(...x.times.map(t => t.p ?? 9999));
+  list.sort((a, b) => T.sort === "cheap" ? minP(a) - minP(b) : T.sort === "close" ? a.f.d - b.f.d : a.times[0].m - b.times[0].m);
+  if (!list.length) { $("teeList").innerHTML = "<div class='empty'>Nothing open for " + T.players + " between " + clock(T.start) + " and " + clock(T.start + 180) + ". Try a later window, fewer players or more miles.</div>"; return; }
+  const cheapest = Math.min(...list.map(minP));
+  $("teeList").innerHTML = list.map(({ f, times }) => {
+    const shown = times.slice(0, 8), more = times.length - shown.length;
+    const book = "https://www.golfnow.com/tee-times/facility/" + f.seo + "/search";
+    return "<article class='tee'><div class='th'><h3>" + esc(f.n) + "</h3><span class='from'>from $" + esc(Math.round(minP({ times }))) + "</span></div>" +
+      "<div class='where'>" + esc(f.c) + " · " + esc(f.d) + " mi · " + esc(f.r) + "★</div>" +
+      "<div class='times'>" + shown.map(t => "<span class='" + (t.h === 9 ? "nine" : "") + "' title='" + (t.h === 9 ? "9 holes" : "18 holes") + "'><b>" + clock(t.m) + "</b>" + (t.p == null ? "" : (t.p === cheapest ? "<i>$" + Math.round(t.p) + "</i>" : "$" + Math.round(t.p))) + (t.h === 9 ? " · 9" : "") + "</span>").join("") + (more > 0 ? "<span>+" + more + " more</span>" : "") + "</div>" +
+      "<div class='acts'><a class='btn sm primary' href='" + esc(book) + "' target='_blank' rel='noopener'>Book for " + T.players + "</a>" +
+      (f.ph ? "<a class='btn sm' href='tel:" + esc(f.ph.replace(/[^0-9+]/g, "")) + "'>Call</a><span class='sub mono' style='align-self:center;user-select:all'>" + esc(f.ph) + "</span>" : "") + "</div></article>";
+  }).join("");
+}
+$("teeDay").addEventListener("click", e => { const b = e.target.closest("[data-day]"); if (!b) return; T.day = b.dataset.day; T.start = null; renderTee(); });
+$("teePlayers").addEventListener("click", e => { const b = e.target.closest("[data-pl]"); if (!b) return; T.players = Number(b.dataset.pl); renderTee(); });
+$("teeDist").addEventListener("click", e => { const b = e.target.closest("[data-dist]"); if (!b) return; T.dist = Number(b.dataset.dist); renderTee(); });
+$("teeSort").addEventListener("click", e => { const b = e.target.closest("[data-sort]"); if (!b) return; T.sort = b.dataset.sort; renderTee(); });
+$("teeStart").addEventListener("change", () => { T.start = Number($("teeStart").value); renderTee(); });
+
+/* ---------- controls ---------- */
+$("me").innerHTML = "<option value=''>Pick your name</option>" + ROSTER.map(n => "<option" + (n === S.me ? " selected" : "") + ">" + esc(n) + "</option>").join("");
+$("rosterList").innerHTML = ROSTER.map(n => "<option value='" + esc(n) + "'>").join("");
+$("me").onchange = () => { S.me = $("me").value; ls.set("golf.me", S.me); renderAll(); };
+$("modeGolf").onclick = () => { S.mode = "golf"; $("modeGolf").setAttribute("aria-pressed", "true"); $("modeTrip").setAttribute("aria-pressed", "false"); renderCal(); };
+$("modeTrip").onclick = () => { S.mode = "trip"; $("modeTrip").setAttribute("aria-pressed", "true"); $("modeGolf").setAttribute("aria-pressed", "false"); renderCal(); };
+$("prev").onclick = () => { S.weekOffset = Math.max(-2, S.weekOffset - 4); renderCal(); };
+$("next").onclick = () => { S.weekOffset = Math.min(40, S.weekOffset + 4); renderCal(); };
+
+function renderAll(){ renderTee(); renderSummary(); renderSync(); renderCal(); renderGroups(); renderWx(); renderCourses(); renderOwes(); renderTrip(); renderMeetup(); renderPosts(); renderStats(); }
+renderAreaSeg(); renderJoke();
+boot();
+</script>
+
+</body></html>

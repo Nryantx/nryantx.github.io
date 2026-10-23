@@ -1,0 +1,188 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="color-scheme" content="dark"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Lopes Lonely Hearts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a fake app-store listing, one column, phone-first. Dark on purpose (single theme). */
+:root{
+  color-scheme: dark;
+  --bg:#0d0f14; --card:#151922; --card2:#1c2230; --line:#262d3d;
+  --ink:#eef1f6; --ink2:#a3acbd; --ink3:#6b7489;
+  --heart:#ff4f7b; --turf:#3ccf7a; --gold:#ffc04d;
+  --f-display:"Bricolage Grotesque","Arial Rounded MT Bold",system-ui,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 60px;display:grid;gap:22px}
+.head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center}
+.icon{width:96px;height:96px;border-radius:22px;background:radial-gradient(circle at 35% 30%,#ff7a9a,var(--heart) 55%,#c52a55);display:grid;place-items:center;box-shadow:0 10px 30px rgba(255,79,123,.25);position:relative;overflow:hidden}
+.icon::before{content:"";width:46px;height:46px;border-radius:50%;background:#f7f7f2;box-shadow:inset -6px -6px 0 rgba(0,0,0,.08);background-image:radial-gradient(circle,#d8d8d0 1.4px,transparent 1.6px);background-size:7px 7px}
+.icon::after{content:"";position:absolute;right:14px;bottom:12px;width:20px;height:3px;background:#1d2a1f;transform:rotate(-38deg);border-radius:2px}
+.head h1{font:800 30px/1.05 var(--f-display);letter-spacing:-.01em}
+.dev{color:var(--heart);font-weight:600;margin-top:4px}
+.tagline{color:var(--ink2);font-size:14px;margin-top:2px}
+.getrow{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.get{background:var(--heart);color:#fff;border:0;border-radius:999px;padding:8px 22px;font:700 15px/1 var(--f-body);cursor:pointer}
+.get:hover{filter:brightness(1.08)}
+.small{font-size:12px;color:var(--ink3)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0}
+.stats div{text-align:center;display:grid;gap:2px;border-left:1px solid var(--line);min-width:0}
+.stats div:first-child{border-left:0}
+.stats b{font:800 20px/1 var(--f-display)}
+.stats span{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.stars{color:var(--gold);letter-spacing:1px}
+h2{font:700 21px/1.1 var(--f-display)}
+.sec{display:grid;gap:12px}
+
+/* swipe deck */
+.deck{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;gap:14px}
+.profile{background:linear-gradient(180deg,#22382a 0%,#1a2b20 62%,#2c4a33 62%,#284430 100%);border-radius:14px;height:260px;position:relative;overflow:hidden}
+.profile canvas{position:absolute;inset:0;width:100%;height:100%}
+.ptxt{background:var(--card2);border-radius:12px;padding:12px 14px;display:grid;gap:4px}
+.ptxt h3{font:700 19px/1.1 var(--f-display)}
+.ptxt p{color:var(--ink2);font-size:14px}
+.swipes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.swipes button{border-radius:999px;padding:12px;font:700 15px/1 var(--f-body);cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink)}
+.swipes .yes{background:var(--turf);border-color:var(--turf);color:#08130c}
+.result{min-height:1.5em;text-align:center;font-weight:600;color:var(--heart)}
+
+/* reviews */
+.rev{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:6px}
+.rev .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.rev h3{font:700 15px/1.2 var(--f-body)}
+.rev .by{font-size:12px;color:var(--ink3)}
+.rev p{color:var(--ink2);font-size:14px}
+.reply{border-left:3px solid var(--heart);padding-left:10px;margin-top:4px}
+.reply b{display:block;font-size:12px;color:var(--heart)}
+.new{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.new ul{margin:6px 0 0;padding-left:18px;color:var(--ink2);font-size:14px;display:grid;gap:4px}
+.crashbtn{justify-self:start;background:transparent;border:1px dashed var(--heart);color:var(--heart);border-radius:10px;padding:10px 14px;font:600 14px/1 var(--f-body);cursor:pointer}
+.foot{text-align:center;color:var(--ink3);font-size:12px}
+
+.crash{position:fixed;inset:0;background:rgba(5,6,9,.82);display:grid;place-items:center;z-index:50;padding:max(16px,env(safe-area-inset-left,0px))}
+.crash .box{background:#e9ebef;color:#1b1e24;border-radius:14px;max-width:340px;width:100%;padding:20px;display:grid;gap:10px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.crash h3{font:700 17px/1.2 var(--f-body)}
+.crash p{font-size:14px;color:#4a505c}
+.crash button{background:#2f6fec;color:#fff;border:0;border-radius:9px;padding:10px;font:600 15px/1 var(--f-body);cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;z-index:60;max-width:calc(100% - 32px);text-align:center}
+@media (max-width:420px){.head h1{font-size:25px}.icon{width:78px;height:78px;border-radius:18px}.stats b{font-size:17px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="icon" role="img" aria-label="App icon: a golf ball on a pink heart"></div>
+    <div>
+      <h1>Lopes Lonely Hearts</h1>
+      <div class="dev">Nate Ryan Software (by request of Jeff Lopes)</div>
+      <div class="tagline">Find love. Or at least a fourth.</div>
+      <div class="getrow"><button class="get" id="get" type="button">GET</button><span class="small">Free · In-app purchases: mulligans</span></div>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div><b>1.1 <span class="stars">★</span></b><span>4 ratings</span></div>
+    <div><b>1</b><span>User</span></div>
+    <div><b>0</b><span>Matches</span></div>
+    <div><b>412</b><span>Crashes</span></div>
+  </div>
+
+  <section class="sec" aria-label="Try the app">
+    <h2>Preview</h2>
+    <div class="deck">
+      <div class="profile"><canvas id="green" width="600" height="260" aria-hidden="true"></canvas></div>
+      <div class="ptxt"><h3 id="pname"></h3><p id="pbio"></p></div>
+      <div class="swipes"><button type="button" id="nope">Swipe left</button><button type="button" class="yes" id="yep">Swipe right</button></div>
+      <div class="result" id="result" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="new">
+    <h2>What's new · v0.0.1</h2>
+    <ul>
+      <li>Fixed a bug where Jeff got a match. It won't happen again.</li>
+      <li>"Nearby users" now correctly shows 1 (you).</li>
+      <li>Super Like replaced with Super Slice.</li>
+      <li>Profile photo upload now rejects anything taken from the cart path.</li>
+    </ul>
+  </section>
+
+  <section class="sec">
+    <h2>Ratings &amp; reviews</h2>
+    <article class="rev"><div class="top"><h3>Opened it once</h3><span class="stars">★☆☆☆☆</span></div><div class="by">Bart</div><p>Only profile in the whole app was Jeff's. His photo was him three-putting.</p></article>
+    <article class="rev"><div class="top"><h3>Matched with a sand trap</h3><span class="stars">★☆☆☆☆</span></div><div class="by">Al</div><p>Then the sand trap unmatched Jeff. Brutal.</p></article>
+    <article class="rev"><div class="top"><h3>Two stars for effort</h3><span class="stars">★★☆☆☆</span></div><div class="by">The other Jeff</div><p>The good Jeff finally found something he's good at: crashing apps.</p></article>
+    <article class="rev"><div class="top"><h3>It asked for my handicap</h3><span class="stars">★☆☆☆☆</span></div><div class="by">Kelly</div><p>I said "using this app."</p>
+      <div class="reply"><b>Developer response</b>Thanks for the feedback. Jeff, you're still our only user. Hope your brother's new knee swings better than you do.</div></article>
+  </section>
+
+  <button class="crashbtn" type="button" id="crash">Tap to see the app's main feature</button>
+  <p class="foot">A Nate Ryan production. No Jeffs were matched in the making of this app.</p>
+</div>
+
+<div class="crash" id="crashBox" hidden>
+  <div class="box" role="alertdialog" aria-labelledby="crashT">
+    <h3 id="crashT">"Lopes Lonely Hearts" quit unexpectedly</h3>
+    <p>Reason: user ran out of mulligans.</p>
+    <button type="button" id="reopen">Reopen</button>
+  </div>
+</div>
+
+<script>
+const P = [
+  ["Gary, 58", "Reads every putt from four angles. Will not read your texts."],
+  ["Dale, 61", "Khakis pressed, ball marked. Emotionally unavailable until the 19th hole."],
+  ["Rick, 47", "Plumb-bobs everything, including this conversation."],
+  ["Steve, 52", "Looking for someone who replaces their divots."],
+  ["Doug, 66", "Has been lining up this 4-footer since 2019. Almost ready."],
+  ["Your reflection in the ball washer", "Already swiped left."]
+];
+const RIGHT = ["No match. He's lining up a 4-footer and can't be disturbed.", "No match. He asked for your handicap and left.", "No match. He's waiting on the group ahead.", "No match. He only dates single-digit handicaps.", "No match. He said you're away.", "No match. Even this one said no."];
+const LEFT = ["Fair.", "Respect.", "He didn't notice.", "He's still putting.", "Bold move for a 1-user app.", "Same."];
+let i = 0;
+const $ = id => document.getElementById(id);
+function toast(t){ const d = document.createElement("div"); d.className = "toast"; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
+
+/* a golfer in khakis crouched behind a putt, drawn once per profile */
+function draw(seed){
+  const c = $("green"), x = c.getContext("2d"), W = c.width, H = c.height;
+  x.clearRect(0, 0, W, H);
+  const sky = x.createLinearGradient(0, 0, 0, H * .55); sky.addColorStop(0, "#22382a"); sky.addColorStop(1, "#2d4a36");
+  x.fillStyle = sky; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#3f7a4c"; x.beginPath(); x.ellipse(W * .5, H * .98, W * .75, H * .5, 0, Math.PI, 0); x.fill();
+  x.fillStyle = "#4f9a5f"; x.beginPath(); x.ellipse(W * .5, H * 1.02, W * .55, H * .36, 0, Math.PI, 0); x.fill();
+  // cup + flag
+  const hx = W * (.72 + (seed % 3) * .05), hy = H * .78;
+  x.fillStyle = "#0e1a12"; x.beginPath(); x.ellipse(hx, hy, 11, 4, 0, 0, Math.PI * 2); x.fill();
+  x.strokeStyle = "#e9e9e2"; x.lineWidth = 2; x.beginPath(); x.moveTo(hx, hy); x.lineTo(hx, hy - 90); x.stroke();
+  x.fillStyle = "#ff4f7b"; x.beginPath(); x.moveTo(hx, hy - 90); x.lineTo(hx + 30, hy - 80); x.lineTo(hx, hy - 70); x.fill();
+  // ball
+  x.fillStyle = "#f7f7f2"; x.beginPath(); x.arc(W * .52, H * .82, 6, 0, Math.PI * 2); x.fill();
+  // golfer crouched
+  const gx = W * .28, gy = H * .86, shirt = ["#2f6fec", "#e05a3a", "#f2f2f2", "#7b4bd6", "#13a37a", "#d9a22b"][seed % 6];
+  x.fillStyle = "#c9b48a"; // khakis
+  x.beginPath(); x.ellipse(gx - 8, gy - 22, 22, 18, 0, 0, Math.PI * 2); x.fill();
+  x.fillRect(gx - 26, gy - 22, 14, 22); x.fillRect(gx + 4, gy - 20, 14, 20);
+  x.fillStyle = "#222"; x.fillRect(gx - 30, gy - 2, 20, 6); x.fillRect(gx + 2, gy - 2, 20, 6);
+  x.fillStyle = shirt; x.beginPath(); x.ellipse(gx + 4, gy - 52, 20, 24, -.35, 0, Math.PI * 2); x.fill();
+  x.fillStyle = "#e3b48f"; x.beginPath(); x.arc(gx + 18, gy - 80, 13, 0, Math.PI * 2); x.fill();
+  x.fillStyle = "#1d1d1d"; x.beginPath(); x.ellipse(gx + 18, gy - 88, 15, 6, 0, Math.PI, 0); x.fill(); x.fillRect(gx + 18, gy - 90, 20, 4);
+  x.strokeStyle = "#cfd3da"; x.lineWidth = 3; x.beginPath(); x.moveTo(gx + 26, gy - 70); x.lineTo(gx + 30, gy - 8); x.stroke();
+  x.fillStyle = "#9aa1ab"; x.fillRect(gx + 24, gy - 10, 14, 5);
+}
+function show(){ const [n, b] = P[i % P.length]; $("pname").textContent = n; $("pbio").textContent = b; draw(i); }
+$("yep").onclick = () => { $("result").textContent = RIGHT[i % RIGHT.length]; i++; show(); };
+$("nope").onclick = () => { $("result").textContent = LEFT[i % LEFT.length]; i++; show(); };
+$("get").onclick = () => toast("Download failed: the app already has its one user.");
+$("crash").onclick = () => { $("crashBox").hidden = false; $("reopen").focus(); };
+$("reopen").onclick = () => { $("crashBox").hidden = true; toast("Crash count: 413"); };
+show();
+</script>
+
+</body></html>
