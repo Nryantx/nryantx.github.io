@@ -70,9 +70,11 @@ foreach ($d in $dates) {
     $r = Search $label @{ SearchType = 1; FacilityId = $id; View = "Grouping" }
     $parts = @()
     foreach ($t in @($r.ttResults.teeTimes)) {
-      if (-not $t.time.date) { continue }
+      # Use GolfNow's displayed time ("7:11" + "AM"); pwsh turns the raw date into a DateTime, 5.1 leaves it a string
+      if ("$($t.time.formatted)" -notmatch '^(\d{1,2}):(\d{2})$') { continue }
+      $h12 = [int]$Matches[1] % 12; if ("$($t.time.formattedTimeMeridian)" -eq "PM") { $h12 += 12 }
       if (-not $facs["$id"].ph -and $t.facility.phoneNumber) { $facs["$id"].ph = $t.facility.phoneNumber }
-      $hhmm = $t.time.date.Substring(11, 2) + $t.time.date.Substring(14, 2)
+      $hhmm = "{0:D2}{1}" -f $h12, $Matches[2]
       $price = [double]$t.displayRate.value
       $pl = $Players["$($t.playerRule)"]; if (-not $pl) { $pl = "1234" }
       $s = "$hhmm,$([math]::Round($price, 2)),$pl"
