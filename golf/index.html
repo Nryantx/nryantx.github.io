@@ -43,6 +43,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .who label{font:500 10.5px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
 .who select{background:var(--panel2);border:1px solid var(--line2);border-radius:3px;padding:6px 8px;min-width:9em}
 .who.need{border-color:var(--season);box-shadow:0 0 0 3px var(--season-bg)}
+.who{flex-wrap:wrap}
+.addme{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.addme input{background:var(--panel2);border:1px solid var(--season);border-radius:3px;padding:6px 8px;width:10em;min-width:0}
 .seg{display:inline-flex;border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;background:var(--panel)}
 .seg button{background:transparent;border:0;padding:8px 11px;font:500 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);cursor:pointer;white-space:nowrap}
 .seg button+button{border-left:1px solid var(--line2)}
@@ -239,6 +242,11 @@ body.dragging{cursor:grabbing;user-select:none;-webkit-user-select:none}
       <div class="who" id="whoBox">
         <label for="me">I am</label>
         <select id="me"><option value="">Pick your name</option></select>
+        <form class="addme" id="addMe" hidden>
+          <input id="newName" maxlength="24" placeholder="Your name" aria-label="Your name" autocomplete="name">
+          <button class="btn sm primary" type="submit">Add</button>
+          <button class="btn sm" type="button" id="addMeCancel">Cancel</button>
+        </form>
       </div>
     </div>
   </header>
@@ -421,9 +429,11 @@ function season(d){
 })();
 
 /* ---------- state ---------- */
-const ROSTER = [...DATA.groups.g1, ...DATA.groups.g2, ...DATA.groups.maybe];
+const BASE_ROSTER = [...DATA.groups.g1, ...DATA.groups.g2, ...DATA.groups.maybe];
+let ROSTER = [...BASE_ROSTER];   // plus names people add themselves (the "people" collection)
 const S = {
   me: ls.get("golf.me") || "",
+  people: [],       // names added from the page
   mode: "golf",
   weekOffset: 0,
   size: 4,
@@ -441,12 +451,16 @@ const S = {
   dirtyMine: false,
   editing: null     // round being edited (object) or null
 };
-if (!ROSTER.includes(S.me)) S.me = "";
+function setRoster(){
+  const seen = new Set();
+  ROSTER = [...BASE_ROSTER, ...S.people, ...(S.me ? [S.me] : [])].filter(n => { const k = n.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; });
+  renderMe();
+}
 
 /* ---------- Firestore backend (the github.io copy has no Claude db, so it saves here) ---------- */
 // Firebase project golf-crew-tee-sheet. Its security rules let anyone read these collections and save the crew's entries.
 const FIRESTORE = "https://firestore.googleapis.com/v1/projects/golf-crew-tee-sheet/databases/(default)/documents/";
-const COLS = ["avail", "rounds", "owes", "posts", "coursevotes", "meta"];
+const COLS = ["avail", "rounds", "owes", "posts", "coursevotes", "people", "meta"];
 const toV = v => v === null || v === undefined ? { nullValue: null }
   : typeof v === "boolean" ? { booleanValue: v }
   : typeof v === "number" ? (Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v })
@@ -519,9 +533,9 @@ async function boot(){
   watch("rounds", rows => { S.rounds = rows; });
   watch("owes", rows => { S.owes = rows; });
   watch("posts", rows => { S.posts = rows.sort((a, b) => String(b.ts).localeCompare(String(a.ts))).slice(0, 40); });
+  watch("people", rows => { S.people = rows.map(r => String(r.name || "").trim()).filter(Boolean).sort((a, b) => a.localeCompare(b)); setRoster(); });
   watch("coursevotes", rows => { const v = {}; rows.forEach(r => v[r.id] = r.names || []); S.votes = v; });
   watch("meta", rows => { rows.forEach(r => {
-    if (r.id === "weather" && Array.isArray(r.days) && r.days.length) S.weather = r;
     if (r.id === "arccos") S.stats = r;
     if (r.id === "courses" && Array.isArray(r.list) && r.list.length) { DATA.courses = r.list; renderAreaSeg(); }
     if (r.id === "meetup" && Array.isArray(r.list) && r.list.length) DATA.meetup = r.list;
@@ -747,11 +761,30 @@ function renderGroups(){
   const month = upcomingDates(31);
   const active = n => (S.avail[n]?.days || []).some(d => month.includes(d));
   const g = (title, list) => "<div><h3>" + esc(title) + "</h3><div class='names'>" + list.map(n => "<span class='" + (active(n) ? "in" : "") + "'>" + esc(n) + "</span>").join("") + "</div></div>";
-  $("groups").innerHTML = g("Group 1", DATA.groups.g1) + g("Group 2", DATA.groups.g2) + g("Maybe", DATA.groups.maybe);
+  const added = ROSTER.filter(n => !BASE_ROSTER.includes(n));
+  $("groups").innerHTML = g("Group 1", DATA.groups.g1) + g("Group 2", DATA.groups.g2) + g("Maybe", DATA.groups.maybe) + (added.length ? g("Added", added) : "");
 }
 
 /* ---------- weather ---------- */
 function isBestWx(w){ return Number(w.rain) <= 20 && Number(w.windMax ?? 99) <= 15; }
+/* Live forecast for The Colony from Open-Meteo (free, no key). Loads on open and every 3 hours. */
+const WX_URL = "https://api.open-meteo.com/v1/forecast?latitude=33.089&longitude=-96.886&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant,weather_code&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FChicago&forecast_days=7";
+const SKY = c => c === 0 ? "Sunny" : c <= 2 ? "Partly cloudy" : c === 3 ? "Cloudy" : c <= 48 ? "Fog" : c <= 57 ? "Drizzle" : c <= 67 ? "Rain" : c <= 77 ? "Snow" : c <= 82 ? "Showers" : c <= 86 ? "Snow showers" : "Storms";
+const COMPASS = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+async function loadWx(){
+  try {
+    const j = await (await fetch(WX_URL, { cache: "no-store" })).json();
+    const d = j.daily; if (!d?.time?.length) return;
+    const now = new Date();
+    const first = now.getHours() < 14 ? iso(now) : iso(new Date(now.getTime() + 86400000));   // after 2pm, start with tomorrow
+    S.weather = { place: "The Colony", as_of: DOW[now.getDay()] + " " + clock(now.getHours() * 60 + now.getMinutes()), days: d.time.map((t, i) => {
+      const wind = Math.round(d.wind_speed_10m_max[i]);
+      return { day: short(t), hi: Math.round(d.temperature_2m_max[i]), lo: Math.round(d.temperature_2m_min[i]), rain: d.precipitation_probability_max[i] ?? 0,
+        wind: COMPASS[Math.round(d.wind_direction_10m_dominant[i] / 22.5) % 16] + " " + wind + " mph", windMax: wind, sky: SKY(d.weather_code[i]), date: t };
+    }).filter(x => x.date >= first) };
+    renderWx(); renderSummary();
+  } catch (e) {}
+}
 function renderWx(){
   const w = S.weather;
   if (!w || !w.days?.length) { $("wx").innerHTML = "<div class='empty' style='grid-column:1/-1'>Forecast not loaded.</div>"; return; }
@@ -953,9 +986,31 @@ $("teeSort").addEventListener("click", e => { const b = e.target.closest("[data-
 $("teeStart").addEventListener("change", () => { T.start = Number($("teeStart").value); renderTee(); });
 
 /* ---------- controls ---------- */
-$("me").innerHTML = "<option value=''>Pick your name</option>" + ROSTER.map(n => "<option" + (n === S.me ? " selected" : "") + ">" + esc(n) + "</option>").join("");
-$("rosterList").innerHTML = ROSTER.map(n => "<option value='" + esc(n) + "'>").join("");
-$("me").onchange = () => { S.me = $("me").value; ls.set("golf.me", S.me); renderAll(); };
+function renderMe(){
+  $("me").innerHTML = "<option value=''>Pick your name</option>" + ROSTER.map(n => "<option" + (n === S.me ? " selected" : "") + ">" + esc(n) + "</option>").join("") + "<option value='__add'>+ Add a name…</option>";
+  $("rosterList").innerHTML = ROSTER.map(n => "<option value='" + esc(n) + "'>").join("");
+}
+function closeAddMe(){ $("addMe").hidden = true; $("me").hidden = false; $("newName").value = ""; }
+$("me").onchange = () => {
+  if ($("me").value === "__add") { $("me").value = S.me; $("me").hidden = true; $("addMe").hidden = false; $("newName").focus(); return; }
+  S.me = $("me").value; ls.set("golf.me", S.me); renderAll();
+};
+$("addMeCancel").onclick = closeAddMe;
+$("addMe").onsubmit = async e => {
+  e.preventDefault();
+  const name = $("newName").value.replace(/\s+/g, " ").trim();
+  if (!name) { $("newName").focus(); return; }
+  const have = ROSTER.find(n => n.toLowerCase() === name.toLowerCase());
+  const pick = have || name;
+  if (!have) {
+    S.people = [...S.people, name];
+    if (!(await write("people/" + slug(name), { name, added: new Date().toISOString() }))) toast("Added here only. Tell Nate to add " + name + ".");
+    else toast(name + " added for everyone");
+  }
+  S.me = pick; ls.set("golf.me", pick);
+  closeAddMe(); setRoster(); renderAll();
+};
+setRoster();
 $("modeGolf").onclick = () => { S.mode = "golf"; $("modeGolf").setAttribute("aria-pressed", "true"); $("modeTrip").setAttribute("aria-pressed", "false"); renderCal(); };
 $("modeTrip").onclick = () => { S.mode = "trip"; $("modeTrip").setAttribute("aria-pressed", "true"); $("modeGolf").setAttribute("aria-pressed", "false"); renderCal(); };
 $("prev").onclick = () => { S.weekOffset = Math.max(-2, S.weekOffset - 4); renderCal(); };
@@ -964,6 +1019,7 @@ $("next").onclick = () => { S.weekOffset = Math.min(40, S.weekOffset + 4); rende
 function renderAll(){ renderTee(); renderSummary(); renderSync(); renderCal(); renderGroups(); renderWx(); renderCourses(); renderOwes(); renderTrip(); renderMeetup(); renderPosts(); renderStats(); }
 renderAreaSeg(); renderJoke();
 boot();
+loadWx(); setInterval(loadWx, 3 * 60 * 60 * 1000);
 </script>
 
 </body></html>
