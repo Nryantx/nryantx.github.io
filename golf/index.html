@@ -567,7 +567,7 @@ const HANDLERS = {
     if (r.id === "courses" && Array.isArray(r.list) && r.list.length) { DATA.courses = r.list; renderAreaSeg(); }
     if (r.id === "meetup" && Array.isArray(r.list) && r.list.length) DATA.meetup = r.list;
     if (r.id === "trip" && r.name) DATA.trip = r;
-    if (r.id === "tee" && r.days && r.as_of && (!TEE.as_of || r.as_of > TEE.as_of)) TEE = r;
+    if (r.id === "tee" && r.days && r.as_of && (!TEE.as_of || r.as_of > TEE.as_of)) TEE = { ...r, facs: r.facs || TEE.facs };
   }); }
 };
 async function boot(){
