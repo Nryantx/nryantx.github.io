@@ -1,0 +1,16 @@
+name: Golf tee times
+
+# Refreshes the "Tee times now" box on nryantx.github.io/golf every 3 hours.
+on:
+  schedule:
+    - cron: "15 */3 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull GolfNow tee times into the golf page's database
+        shell: pwsh
+        run: ./golf/update-tee.ps1
