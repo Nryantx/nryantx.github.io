@@ -420,13 +420,6 @@ video.clip{width:100%;max-width:100%;border-radius:4px;margin-top:8px;background
         </section>
       </div>
     </div>
-    <section class="sec" id="photoSec" hidden>
-      <div class="sec-h"><h2>The camera roll</h2><span class="meta" id="photoMeta"></span></div>
-      <div class="sec-b">
-        <div class="pgrid" id="photos"></div>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn sm" type="button" id="photoMore">Show more</button><button class="btn sm" type="button" id="photoShuffle">Shuffle</button><a class="btn sm" id="photoAlbum" target="_blank" rel="noopener" hidden>Open the album</a></div>
-      </div>
-    </section>
   </div>
 </div>
 
@@ -1021,8 +1014,7 @@ function renderStats(){
       (r.note ? "<p class='sub' style='margin-top:6px'>" + esc(r.note) + "</p>" : "") +
       "<div class='acts' style='margin-top:6px'>" + (r.parF ? "<button type='button' class='btn sm primary' data-replay='" + R.indexOf(r) + "'>▶ Play-by-play</button>" : "") +
         (r.place ? "<a class='btn sm' target='_blank' rel='noopener' href='" + esc(flyUrl(r.place)) + "'>✈ Fly-over (3D)</a>" : "") + "</div>" +
-      (r.video ? "<video class='clip' controls playsinline preload='metadata' src='" + esc(r.video) + "' data-rate='2'></video>" : "") + "</div>").join("");
-  document.querySelectorAll("video.clip").forEach(v => { v.addEventListener("loadedmetadata", () => { v.playbackRate = Number(v.dataset.rate || 1); }); });
+      "</div>").join("");
 }
 
 /* ---------- copy ---------- */
@@ -1131,29 +1123,6 @@ function replay(r){
 }
 $("stats").addEventListener("click", e => { const b = e.target.closest("[data-replay]"); if (!b) return; const r = (S.stats?.rounds || [])[Number(b.dataset.replay)]; if (r) replay(r); });
 
-/* ---------- photos (from the shared Golf Crew album) ---------- */
-const PH = { list: [], shown: 24 };
-function renderPhotos(){
-  const all = DATA.photos?.list || [];
-  $("photoSec").hidden = !all.length;
-  if (!all.length) return;
-  if (!PH.list.length) PH.list = [...all].sort(() => Math.random() - .5);
-  $("photoMeta").textContent = all.length + " shots, " + (DATA.photos.range || "");
-  if (DATA.photos.album) { $("photoAlbum").href = DATA.photos.album; $("photoAlbum").hidden = false; }
-  $("photos").innerHTML = PH.list.slice(0, PH.shown).map((p, i) => "<button type='button' data-i='" + i + "' aria-label='Open photo'><img loading='lazy' alt='' src='" + esc(p + "=w400-h400-c") + "'></button>").join("");
-  $("photoMore").hidden = PH.shown >= PH.list.length;
-}
-$("photoMore").onclick = () => { PH.shown += 24; renderPhotos(); };
-$("photoShuffle").onclick = () => { PH.list = [...(DATA.photos?.list || [])].sort(() => Math.random() - .5); PH.shown = 24; renderPhotos(); };
-$("photos").addEventListener("click", e => {
-  const b = e.target.closest("[data-i]"); if (!b) return;
-  let i = Number(b.dataset.i);
-  const box = document.createElement("div"); box.className = "lightbox"; box.setAttribute("role", "dialog");
-  const draw = () => { box.innerHTML = "<div><img alt='' src='" + esc(PH.list[i] + "=w1600-h1600") + "'><div class='lbar'><button class='btn sm' data-a='prev'>◀</button><button class='btn sm' data-a='close'>Close</button><button class='btn sm' data-a='next'>▶</button></div></div>"; };
-  draw(); document.body.appendChild(box);
-  box.addEventListener("click", ev => { const a = ev.target.closest("[data-a]")?.dataset.a; if (a === "prev") { i = (i - 1 + PH.list.length) % PH.list.length; draw(); } else if (a === "next") { i = (i + 1) % PH.list.length; draw(); } else if (a === "close" || ev.target === box) box.remove(); });
-});
-
 /* ---------- controls ---------- */
 function setRoster(){
   const seen = new Set();
@@ -1191,7 +1160,7 @@ $("modeTrip").onclick = () => { S.mode = "trip"; $("modeTrip").setAttribute("ari
 $("prev").onclick = () => { S.weekOffset = Math.max(-2, S.weekOffset - 4); renderCal(); };
 $("next").onclick = () => { S.weekOffset = Math.min(40, S.weekOffset + 4); renderCal(); };
 
-function renderAll(){ renderTee(); renderSummary(); renderSync(); renderCal(); renderGroups(); renderWx(); renderCourses(); renderOwes(); renderTrip(); renderMeetup(); renderPosts(); renderStats(); renderPhotos(); }
+function renderAll(){ renderTee(); renderSummary(); renderSync(); renderCal(); renderGroups(); renderWx(); renderCourses(); renderOwes(); renderTrip(); renderMeetup(); renderPosts(); renderStats(); }
 renderAreaSeg(); renderJoke();
 boot();
 </script>
