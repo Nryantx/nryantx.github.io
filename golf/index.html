@@ -443,6 +443,64 @@ const S = {
 };
 if (!ROSTER.includes(S.me)) S.me = "";
 
+/* ---------- Firestore backend (the github.io copy has no Claude db, so it saves here) ---------- */
+// Firebase project golf-crew-tee-sheet. Its security rules let anyone read these collections and save the crew's entries.
+const FIRESTORE = "https://firestore.googleapis.com/v1/projects/golf-crew-tee-sheet/databases/(default)/documents/";
+const COLS = ["avail", "rounds", "owes", "posts", "coursevotes", "meta"];
+const toV = v => v === null || v === undefined ? { nullValue: null }
+  : typeof v === "boolean" ? { booleanValue: v }
+  : typeof v === "number" ? (Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v })
+  : typeof v === "string" ? { stringValue: v }
+  : Array.isArray(v) ? { arrayValue: { values: v.map(toV) } }
+  : { mapValue: { fields: toF(v) } };
+const toF = o => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined).map(([k, v]) => [k, toV(v)]));
+const fromV = v => "nullValue" in v ? null : "booleanValue" in v ? v.booleanValue
+  : "integerValue" in v ? Number(v.integerValue) : "doubleValue" in v ? v.doubleValue
+  : "stringValue" in v ? v.stringValue : "timestampValue" in v ? v.timestampValue
+  : "arrayValue" in v ? (v.arrayValue.values || []).map(fromV)
+  : "mapValue" in v ? fromF(v.mapValue.fields || {}) : null;
+const fromF = f => Object.fromEntries(Object.entries(f).map(([k, v]) => [k, fromV(v)]));
+function firestoreDb(base){
+  let rows = {}, gen = 0;
+  const subs = [];
+  const snap = col => ({ docs: Object.keys(rows).filter(p => p.split("/")[0] === col).map(p => ({ id: p.split("/")[1], exists: true, data: () => rows[p] })) });
+  const emit = () => subs.forEach(s => s.fn(snap(s.col)));
+  async function list(col){
+    const out = {}; let token = "";
+    do {
+      const r = await fetch(base + col + "?pageSize=300" + (token ? "&pageToken=" + encodeURIComponent(token) : ""), { cache: "no-store" });
+      if (!r.ok) throw new Error("read failed");
+      const j = await r.json();
+      (j.documents || []).forEach(d => { out[col + "/" + d.name.split("/").pop()] = fromF(d.fields || {}); });
+      token = j.nextPageToken || "";
+    } while (token);
+    return out;
+  }
+  async function pull(){
+    const g = gen;
+    try {
+      const parts = await Promise.all(COLS.map(list));
+      if (g !== gen) return true;   // a save landed mid-fetch; this copy is stale
+      rows = Object.assign({}, ...parts); emit(); return true;
+    } catch (e) { return false; }
+  }
+  async function send(path, init){
+    const r = await fetch(base + path, init);
+    if (!r.ok) throw new Error("save failed");
+    gen++;
+  }
+  setInterval(() => { if (!document.hidden) pull(); }, 20000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) pull(); });
+  return {
+    ready: pull,
+    collection: col => ({ onSnapshot(fn){ subs.push({ col, fn }); fn(snap(col)); } }),
+    doc: path => ({
+      async set(data){ await send(path, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fields: toF(data) }) }); rows[path] = data; emit(); },
+      async delete(){ await send(path, { method: "DELETE" }); delete rows[path]; emit(); }
+    })
+  };
+}
+
 /* ---------- db wiring ---------- */
 async function boot(){
   renderAll();
@@ -450,6 +508,10 @@ async function boot(){
   try { db = await window.claude?.use?.("db"); } catch(e) { db = null; }
   try { user = await window.claude?.use?.("user"); } catch(e) { user = null; }
   if (user) { try { S.canWrite = await user.can("data.write"); } catch(e) {} }
+  if (!db) {
+    const fdb = firestoreDb(FIRESTORE);
+    if (await fdb.ready()) { db = fdb; S.canWrite = true; }
+  }
   if (!db) { S.db = null; S.live = false; S.canWrite = false; renderAll(); return; }
   S.db = db; S.live = true;
   const watch = (col, fn) => db.collection(col).onSnapshot(snap => { fn(snap.docs.filter(d => d.exists).map(d => ({ id: d.id, ...d.data() }))); renderAll(); }, () => {});
