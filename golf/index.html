@@ -238,6 +238,16 @@ video.clip{width:100%;max-width:100%;border-radius:4px;margin-top:8px;background
 .lightbox img{max-width:100%;max-height:82vh;border-radius:4px}
 .lightbox .lbar{display:flex;gap:8px;justify-content:center;margin-top:10px}
 
+/* calendar grid in grey (Nate's call, Oct 23) */
+#calSec .mgrid{background:#2b2e32;border-color:#43474d}
+#calSec .dow{background:#35393e;color:#b4b8bd;border-color:#43474d}
+#calSec .cell{background:#2b2e32;border-color:#43474d}
+#calSec .cell.wknd{background:#313438}
+#calSec .cell:not(.past):hover{background:#3a3e43}
+#calSec .cell .dn{color:#d6d9dc}
+#calSec .inits i{background:#3a3e43;border-color:#4b5056;color:#d6d9dc}
+#calSec .cnt.h1{background:#3a3e43;color:#d6d9dc}
+
 /* lists */
 .rows{display:grid}
 .rows li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
