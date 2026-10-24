@@ -1217,17 +1217,24 @@ function drawMeetMap(pts, res, mode){
   box.hidden = false;
   const sel = res[MEET.sel];
   const all = [...pts.map(r => r.pt), ...res.map(x => x.p)];
-  let la0 = Math.min(...all.map(p => p.lat)), la1 = Math.max(...all.map(p => p.lat)), lo0 = Math.min(...all.map(p => p.lon)), lo1 = Math.max(...all.map(p => p.lon));
-  const k = Math.cos((la0 + la1) / 2 * Math.PI / 180);
-  let w = (lo1 - lo0) * k, h = la1 - la0; const minSpan = 0.08; if (w < minSpan) { lo0 -= (minSpan - w) / 2 / k; lo1 += (minSpan - w) / 2 / k; w = minSpan; } if (h < minSpan * .6) { la0 -= (minSpan * .6 - h) / 2; la1 += (minSpan * .6 - h) / 2; h = minSpan * .6; }
-  const W = Math.round(Math.max(300, Math.min(900, box.clientWidth || 600))), H = Math.round(W * (W < 520 ? 0.78 : 0.56)), pad = 30, s = Math.min((W - pad * 2) / w, (H - pad * 2) / h);
-  const ox = (W - w * s) / 2, oy = (H - h * s) / 2;
-  const X = p => ox + (p.lon - lo0) * k * s, Y = p => oy + (la1 - p.lat) * s;
-  const inB = p => p.lat >= la0 - h * .1 && p.lat <= la1 + h * .1 && p.lon >= lo0 - w / k * .1 && p.lon <= lo1 + w / k * .1;
+  const W = Math.round(Math.max(300, Math.min(900, box.clientWidth || 600))), H = Math.round(W * (W < 520 ? 0.78 : 0.56)), pad = 30;
+  const merc = (p, z) => { const n = 256 * Math.pow(2, z), sn = Math.sin(p.lat * Math.PI / 180); return [(p.lon + 180) / 360 * n, (0.5 - Math.log((1 + sn) / (1 - sn)) / (4 * Math.PI)) * n]; };
+  let z = 14;
+  for (; z > 3; z--) { const ps = all.map(p => merc(p, z)); const bw = Math.max(...ps.map(q => q[0])) - Math.min(...ps.map(q => q[0])), bh = Math.max(...ps.map(q => q[1])) - Math.min(...ps.map(q => q[1])); if (bw <= W - pad * 2 && bh <= H - pad * 2) break; }
+  z = Math.min(z, 13);
+  const ps = all.map(p => merc(p, z));
+  const x0 = (Math.min(...ps.map(q => q[0])) + Math.max(...ps.map(q => q[0]))) / 2 - W / 2, y0 = (Math.min(...ps.map(q => q[1])) + Math.max(...ps.map(q => q[1]))) / 2 - H / 2;
+  const X = p => merc(p, z)[0] - x0, Y = p => merc(p, z)[1] - y0;
+  const inB = p => { const x = X(p), y = Y(p); return x > -20 && x < W + 20 && y > -20 && y < H + 20; };
+  const latC = all.reduce((a, p) => a + p.lat, 0) / all.length, pxMile = (256 * Math.pow(2, z) / 360) / (69.17 * Math.cos(latC * Math.PI / 180));
+  const sat = SAT.ok && SAT.on;
   let g = "<rect width='" + W + "' height='" + H + "' fill='#1f2327'/>";
-  for (let i = 1; i < 6; i++) g += "<line x1='0' x2='" + W + "' y1='" + (H * i / 6) + "' y2='" + (H * i / 6) + "' stroke='#2a2f34'/><line y1='0' y2='" + H + "' x1='" + (W * i / 6) + "' x2='" + (W * i / 6) + "' stroke='#2a2f34'/>";
-  DATA.towns.filter(([n, la, lo]) => inB({ lat: la, lon: lo })).forEach(([n, la, lo]) => { const p = { lat: la, lon: lo }; g += "<circle cx='" + X(p) + "' cy='" + Y(p) + "' r='2' fill='#5b636b'/><text x='" + (X(p) + 5) + "' y='" + (Y(p) - 4) + "' font-size='10' fill='#7d868f' font-family='IBM Plex Mono,monospace'>" + esc(n) + "</text>"; });
-  places().filter(inB).forEach(p => { g += "<circle cx='" + X(p) + "' cy='" + Y(p) + "' r='2.5' fill='#4b5258'/>"; });
+  if (sat) {
+    for (let tx = Math.floor(x0 / 256); tx <= Math.floor((x0 + W) / 256); tx++) for (let ty = Math.floor(y0 / 256); ty <= Math.floor((y0 + H) / 256); ty++) g += "<image href='" + satTile(z, ty, tx) + "' x='" + (tx * 256 - x0) + "' y='" + (ty * 256 - y0) + "' width='256' height='256'/>";
+    g += "<rect width='" + W + "' height='" + H + "' fill='#000' fill-opacity='.22'/>";
+  } else for (let i = 1; i < 6; i++) g += "<line x1='0' x2='" + W + "' y1='" + (H * i / 6) + "' y2='" + (H * i / 6) + "' stroke='#2a2f34'/><line y1='0' y2='" + H + "' x1='" + (W * i / 6) + "' x2='" + (W * i / 6) + "' stroke='#2a2f34'/>";
+  DATA.towns.filter(([n, la, lo]) => inB({ lat: la, lon: lo })).forEach(([n, la, lo]) => { const p = { lat: la, lon: lo }; g += "<circle cx='" + X(p) + "' cy='" + Y(p) + "' r='2' fill='" + (sat ? "#e4ecef" : "#5b636b") + "'/><text x='" + (X(p) + 5) + "' y='" + (Y(p) - 4) + "' font-size='10' fill='" + (sat ? "#e4ecef" : "#7d868f") + "' font-family='IBM Plex Mono,monospace' style='paint-order:stroke;stroke:#0a1013;stroke-width:3px'>" + esc(n) + "</text>"; });
+  places().filter(inB).forEach(p => { g += "<circle cx='" + X(p) + "' cy='" + Y(p) + "' r='2.5' fill='" + (sat ? "#9fb0b9" : "#4b5258") + "'/>"; });
   const col = getComputedStyle(document.documentElement).getPropertyValue("--season").trim() || "#f28a2e";
   const pc = ["#45c4e8", "#63d38e", "#ff5d52", "#c49bff", "#f2c94c", "#ff8fc6", "#7fe3d4", "#e4ecef", "#ffb26b", "#9fb4ff"];
   if (mode === "way") { const [A, B] = pts.map(r => r.pt); g += "<line x1='" + X(A) + "' y1='" + Y(A) + "' x2='" + X(B) + "' y2='" + Y(B) + "' stroke='#45c4e8' stroke-width='10' stroke-opacity='.12' stroke-linecap='round'/><line x1='" + X(A) + "' y1='" + Y(A) + "' x2='" + X(B) + "' y2='" + Y(B) + "' stroke='#45c4e8' stroke-width='2'/>"; }
@@ -1235,13 +1242,17 @@ function drawMeetMap(pts, res, mode){
   if (sel && mode === "way") { const A = pts[0].pt, B = pts[1].pt; [A, B].forEach((a, i) => { g += "<line x1='" + X(a) + "' y1='" + Y(a) + "' x2='" + X(sel.p) + "' y2='" + Y(sel.p) + "' stroke='" + col + "' stroke-width='2' stroke-dasharray='5 5'/>"; }); }
   res.forEach((x, i) => { const on = i === MEET.sel; g += "<g data-pick='" + i + "' style='cursor:pointer'><circle cx='" + X(x.p) + "' cy='" + Y(x.p) + "' r='" + (on ? 13 : 10) + "' fill='" + (on ? col : "#2d3338") + "' stroke='" + col + "' stroke-width='2'/><text x='" + X(x.p) + "' y='" + (Y(x.p) + 4) + "' text-anchor='middle' font-size='11' font-weight='700' fill='" + (on ? "#0a1013" : "#e4ecef") + "' font-family='IBM Plex Mono,monospace'>" + (i + 1) + "</text></g>"; });
   pts.forEach((r, i) => { const a = r.pt, c = mode === "way" ? "#45c4e8" : pc[i % pc.length], lab = (r.who || ("P" + (i + 1))).split(/\s+/).map(x => x[0]).join("").slice(0, 2).toUpperCase(); g += "<circle cx='" + X(a) + "' cy='" + Y(a) + "' r='12' fill='" + c + "' stroke='#0a1013' stroke-width='2'/><text x='" + X(a) + "' y='" + (Y(a) + 4) + "' text-anchor='middle' font-size='10' font-weight='700' fill='#0a1013' font-family='IBM Plex Mono,monospace'>" + esc(lab) + "</text>"; });
-  const sm = [1, 2, 5, 10, 20, 50, 100, 200][[1, 2, 5, 10, 20, 50, 100, 200].findIndex(v => v * s / 69 > 60)] || 200, sl = sm * s / 69;
-  g += "<line x1='" + (W - pad - sl) + "' x2='" + (W - pad) + "' y1='" + (H - 14) + "' y2='" + (H - 14) + "' stroke='#98abb4' stroke-width='2'/><text x='" + (W - pad - sl / 2) + "' y='" + (H - 19) + "' text-anchor='middle' font-size='10' fill='#98abb4' font-family='IBM Plex Mono,monospace'>" + sm + " mi</text>";
+  const sm = [1, 2, 5, 10, 20, 50, 100, 200][[1, 2, 5, 10, 20, 50, 100, 200].findIndex(v => v * pxMile > 60)] || 200, sl = sm * pxMile;
+  g += "<line x1='" + (W - pad - sl) + "' x2='" + (W - pad) + "' y1='" + (H - 14) + "' y2='" + (H - 14) + "' stroke='#e4ecef' stroke-width='2'/><text x='" + (W - pad - sl / 2) + "' y='" + (H - 19) + "' text-anchor='middle' font-size='10' fill='#e4ecef' font-family='IBM Plex Mono,monospace' style='paint-order:stroke;stroke:#0a1013;stroke-width:3px'>" + sm + " mi</text>";
   const cap = sel ? (mode === "mid" ? "<span><b>#" + (MEET.sel + 1) + " " + esc(sel.p.name) + "</b> · longest drive " + sel.max + " mi · total " + sel.tot + " mi</span>" : "<span><b>#" + (MEET.sel + 1) + " " + esc(sel.p.name) + "</b> · " + road(sel.det) + " mi out of the way</span>") + "<a class='btn sm' target='_blank' rel='noopener' href='https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(sel.p.name + " " + sel.p.city) + "'>Directions</a>" : "<span>No course near this drive.</span>";
-  box.innerHTML = "<svg viewBox='0 0 " + W + " " + H + "' role='img' aria-label='Map of where everyone is coming from and the courses between them'>" + g + "</svg><div class='mm-cap'>" + cap + "</div>";
+  const tog = SAT.ok ? "<button type='button' class='btn sm' data-sat='1'>" + (SAT.on ? "Plain map" : "Satellite") + "</button>" : "";
+  box.innerHTML = "<svg viewBox='0 0 " + W + " " + H + "' role='img' aria-label='Map of where everyone is coming from and the courses between them'>" + g + "</svg><div class='mm-cap'>" + cap + tog + (sat ? "<span class='sub' style='font-size:10px'>Imagery © Esri, Maxar, Earthstar Geographics</span>" : "") + "</div>";
 }
+const SAT = { ok: null, on: true };
+const satTile = (z, y, x) => "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/" + z + "/" + y + "/" + x;
+(() => { const im = new Image(); im.onload = () => { SAT.ok = true; if (!$("meetMap").hidden) renderMeet(); }; im.onerror = () => { SAT.ok = false; }; im.src = satTile(10, 412, 237); })();
 let meetRz = null; window.addEventListener("resize", () => { clearTimeout(meetRz); meetRz = setTimeout(() => { if (!$("meetMap").hidden) renderMeet(); }, 250); });
-$("meetMap").addEventListener("click", e => { const g = e.target.closest("[data-pick]"); if (!g) return; MEET.sel = Number(g.dataset.pick); renderMeet(); });
+$("meetMap").addEventListener("click", e => { if (e.target.closest("[data-sat]")) { SAT.on = !SAT.on; renderMeet(); return; } const g = e.target.closest("[data-pick]"); if (!g) return; MEET.sel = Number(g.dataset.pick); renderMeet(); });
 $("meetList").addEventListener("click", e => { if (e.target.closest("a,button")) return; const c = e.target.closest("[data-pick]"); if (!c) return; MEET.sel = Number(c.dataset.pick); renderMeet(); $("meetMap").scrollIntoView({ block: "nearest", behavior: "smooth" }); });
 function meetCard(p, chips, i){
   return "<article class='tee" + (i === MEET.sel ? " pick" : "") + "' data-pick='" + i + "'><div class='th'><h3>" + (i + 1) + ". " + esc(p.name) + "</h3></div><div class='where'>" + esc(p.city) + "</div><div class='dist'>" + chips + "</div>" +
